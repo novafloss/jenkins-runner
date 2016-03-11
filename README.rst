@@ -4,8 +4,16 @@
  Define jobs from project
 ==========================
 
-``jenkins-runner`` is a test runner that reads tests commands from source
-checkout rather than jenkins configuration.
+``jenkins-yml`` is a test runner that reads tests commands from source checkout
+rather than jenkins configuration.
+
+
+Setup
+=====
+
+On your Jenkins executor, ``pip3 install jenkins-yml`` and then use
+``jenkins-yml-runner`` as shell command.
+
 
 ``jenkins.yml`` format
 ======================
@@ -21,6 +29,12 @@ mapping of ``JOB_NAME`` to scripts. For example::
   app-doc:
     script: |
       tox -e sphinx -r
+
+
+To test a job, simply run::
+
+  JOB_NAME=app-test jenkins-yml-runner
+
 
 .. |PyPI| image:: https://img.shields.io/pypi/v/jenkins-yml.svg
    :target: https://pypi.python.org/pypi/jenkins-yml
