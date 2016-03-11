@@ -4,10 +4,10 @@
 from setuptools import setup
 
 setup(
-    name='jenkins-runner',
+    name='jenkins-yml',
     version='0.1.dev0',
     entry_points={
-        'console_scripts': ['jenkins-runner=jenkins_runner:entrypoint'],
+        'console_scripts': ['jenkins-yml-runner=jenkins_yml:entrypoint'],
     },
     extras_require={
         'release': ['wheel', 'zest.releaser'],
@@ -27,5 +27,5 @@ setup(
     ],
     keywords=['jenkins'],
     license='GPL v3 or later',
-    url='https://github.com/novafloss/jenkins-runner',
+    url='https://github.com/novafloss/jenkins-yml',
 )
