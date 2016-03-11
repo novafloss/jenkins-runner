@@ -15,7 +15,7 @@ setup(
     install_requires=[
         'pyyaml',
     ],
-    py_modules=['jenkins_runner'],
+    py_modules=['jenkins_yml'],
     description='Define Jenkins jobs from repository',
     author=u'Étienne BERSAC',
     author_email='etienne.bersac@people-doc.com',
