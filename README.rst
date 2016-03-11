@@ -1,3 +1,5 @@
+| |PyPI|
+
 ==========================
  Define jobs from project
 ==========================
@@ -19,3 +21,7 @@ mapping of ``JOB_NAME`` to scripts. For example::
   app-doc:
     script: |
       tox -e sphinx -r
+
+.. |PyPI| image:: https://img.shields.io/pypi/v/jenkins-yml.svg
+   :target: https://pypi.python.org/pypi/jenkins-yml
+   :alt: Version on PyPI
