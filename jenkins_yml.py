@@ -20,8 +20,8 @@ def entrypoint():
         sys.exit(1)
 
     if not os.path.exists('jenkins.yml'):
-        logger.warn("Missing jenkins.yml")
-        sys.exit(1)
+        logger.warn("Missing jenkins.yml. Skipping this commit.")
+        sys.exit(0)
 
     try:
         config = yaml.load(open('jenkins.yml').read())
