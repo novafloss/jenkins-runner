@@ -1,0 +1,18 @@
+simple: |
+  : $JOB_NAME
+
+missing-script: {}
+
+script:
+  script: |
+    : $JOB_NAME
+
+overwrite-runner-inexistant:
+  runner: inexistant
+  script: |
+    : $JOB_NAME
+
+overwrite-runner:
+  runner: unconfined
+  script: |
+    : $JOB_NAME

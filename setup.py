@@ -7,7 +7,8 @@ setup(
     name='jenkins-yml',
     version='1.3',
     entry_points={
-        'console_scripts': ['jenkins-yml-runner=jenkins_yml:entrypoint'],
+        'console_scripts': ['jenkins-yml-runner=jenkins_yml:console_script'],
+        'jenkins_yml.runners': ['unconfined=jenkins_yml:unconfined'],
     },
     extras_require={
         'release': ['wheel', 'zest.releaser'],
