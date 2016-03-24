@@ -1,4 +1,4 @@
-| |PyPI|
+| |CI| |PyPI|
 
 ==========================
  Define jobs from project
@@ -35,6 +35,10 @@ To test a job, simply run::
 
   JOB_NAME=app-test jenkins-yml-runner
 
+
+.. |CI| image:: https://circleci.com/gh/novafloss/jenkins-yml.svg?style=shield
+   :target: https://circleci.com/gh/novafloss/jenkins-yml
+   :alt: CI Status
 
 .. |PyPI| image:: https://img.shields.io/pypi/v/jenkins-yml.svg
    :target: https://pypi.python.org/pypi/jenkins-yml
