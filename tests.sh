@@ -21,5 +21,9 @@ JOB_NAME=simple jenkins-yml-runner |& grep -C 10 simple
 JOB_NAME=script jenkins-yml-runner
 JOB_NAME=overwrite-runner jenkins-yml-runner
 ! JOB_NAME=overwrite-runner-inexistant jenkins-yml-runner
+AXE1=a JOB_NAME=matrix jenkins-yml-runner
+AXE1=b JOB_NAME=matrix jenkins-yml-runner
+AXE1=inexistant JOB_NAME=matrix jenkins-yml-runner
+! MISSING_AXE1= JOB_NAME=matrix jenkins-yml-runner
 
 : SUCCESS

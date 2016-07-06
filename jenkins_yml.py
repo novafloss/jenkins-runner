@@ -51,6 +51,16 @@ def console_script():
         logger.warn("Job not defined for this commit. Skipping.")
         sys.exit(0)
 
+    if isinstance(config, dict) and 'axis' in config:
+        for name, values in config['axis'].items():
+            if name not in os.environ:
+                logger.error("Missing axis %s value.", name)
+                sys.exit(1)
+            current = os.environ[name]
+            if current not in values:
+                logger.warn("%s=%s not available. Skipping.", name, current)
+                sys.exit(0)
+
     call_runner(os.environ.get('JENKINS_YML_RUNNER', 'unconfined'), config)
 
 
