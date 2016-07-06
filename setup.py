@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='jenkins-yml',
-    version='1.3',
+    version='1.4',
     entry_points={
         'console_scripts': ['jenkins-yml-runner=jenkins_yml:console_script'],
         'jenkins_yml.runners': ['unconfined=jenkins_yml:unconfined'],
