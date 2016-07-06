@@ -35,7 +35,7 @@ def console_script():
     if not name:
         logger.error("JOB_NAME required.")
         sys.exit(1)
-    name, _ = name.split('/', 1)
+    name, _ = (name + '/').split('/', 1)
 
     if not os.path.exists('jenkins.yml'):
         logger.warn("Missing jenkins.yml. Skipping this commit.")
@@ -58,6 +58,7 @@ def console_script():
                 logger.error("Missing axis %s value.", name)
                 sys.exit(1)
             current = os.environ[name]
+            values = {str(value) for value in values}
             if current not in values:
                 logger.warn("%s=%s not available. Skipping.", name, current)
                 sys.exit(0)

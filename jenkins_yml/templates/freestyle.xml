@@ -1,92 +1,16 @@
+{% from 'job.j2' import base, baseparameters, baseproperties, builders, publishers, scm %}
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
-  <actions/>
-  <description/>
-  <keepDependencies>false</keepDependencies>
+  {{ base(node, description, build_name) }}
   <properties>
-    <hudson.plugins.buildblocker.BuildBlockerProperty plugin="build-blocker-plugin@1.7.3">
-      <useBuildBlocker>false</useBuildBlocker>
-      <blockLevel>GLOBAL</blockLevel>
-      <scanQueueFor>DISABLED</scanQueueFor>
-      <blockingJobs></blockingJobs>
-    </hudson.plugins.buildblocker.BuildBlockerProperty>
-
+    {{ baseproperties(blocking_jobs)|indent(4) }}
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
-        <hudson.model.StringParameterDefinition>
-          <name>REVISION</name>
-          <description></description>
-          <defaultValue>**</defaultValue>
-        </hudson.model.StringParameterDefinition>
+        {{ baseparameters()|indent(8) }}
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
-    {% if github_repository is defined %}
-    <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.17.0">
-      <projectUrl>{{ github_repository }}</projectUrl>
-      <displayName></displayName>
-    </com.coravy.hudson.plugins.github.GithubProjectProperty>
-    {% endif %}
-    <jenkins.model.BuildDiscarderProperty>
-      <strategy class="hudson.tasks.LogRotator">
-        <daysToKeep>-1</daysToKeep>
-        <numToKeep>128</numToKeep>
-        <artifactDaysToKeep>-1</artifactDaysToKeep>
-        <artifactNumToKeep>-1</artifactNumToKeep>
-      </strategy>
-    </jenkins.model.BuildDiscarderProperty>
   </properties>
-  {% if github_repository is defined %}
-  <scm class="hudson.plugins.git.GitSCM" plugin="git@2.4.2">
-    <configVersion>2</configVersion>
-    <userRemoteConfigs>
-      <hudson.plugins.git.UserRemoteConfig>
-        <url>{{ github_repository }}.git</url>
-        <credentialsId>{{ scm_credentials }}</credentialsId>
-      </hudson.plugins.git.UserRemoteConfig>
-    </userRemoteConfigs>
-    <branches>
-      <hudson.plugins.git.BranchSpec>
-        <name>${REVISION}</name>
-      </hudson.plugins.git.BranchSpec>
-    </branches>
-    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
-    <submoduleCfg class="list"/>
-    <extensions>
-      <hudson.plugins.git.extensions.impl.PruneStaleBranch/>
-      <hudson.plugins.git.extensions.impl.SubmoduleOption>
-        <disableSubmodules>false</disableSubmodules>
-        <recursiveSubmodules>true</recursiveSubmodules>
-        <trackingSubmodules>false</trackingSubmodules>
-        <reference></reference>
-      </hudson.plugins.git.extensions.impl.SubmoduleOption>
-    </extensions>
-  </scm>
-  {% endif %}
-  {% if assigned_node is defined %}
-  <assignedNode>{{ assigned_node }}</assignedNode>
-  {% endif %}
-  <canRoam>false</canRoam>
-  <disabled>false</disabled>
-  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers>
-    <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.17.0">
-      <spec></spec>
-    </com.cloudbees.jenkins.GitHubPushTrigger>
-  </triggers>
-  <concurrentBuild>true</concurrentBuild>
-  <builders>
-    {% if set_commit_status|default(False) %}
-    <com.cloudbees.jenkins.GitHubSetCommitStatusBuilder plugin="github@1.17.0">
-      <statusMessage>
-        <content/>
-      </statusMessage>
-    </com.cloudbees.jenkins.GitHubSetCommitStatusBuilder>
-    {% endif %}
-    <hudson.tasks.Shell>
-      <command>{{ command }}</command>
-    </hudson.tasks.Shell>
-  </builders>
-  <publishers/>
-  <buildWrappers/>
+  {{ scm(github_repository, scm_credentials)|indent(2) }}
+  {{ builders(set_commit_status, command)|indent(2) }}
+  {{ publishers(artefacts, test_results, cobertura_report)|indent(2) }}
 </project>

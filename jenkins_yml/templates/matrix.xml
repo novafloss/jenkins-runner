@@ -1,0 +1,43 @@
+{% from 'job.j2' import base, baseparameters, baseproperties, builders, publishers, scm %}
+<?xml version='1.0' encoding='UTF-8'?>
+<matrix-project plugin="matrix-project@1.7">
+  {{ base('master', build_name, description)|indent(2) }}
+  <properties>
+    {{ baseproperties(blocking_jobs)|indent(4) }}
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        {{ baseparameters()|indent(8) }}
+        <hudson.plugins.matrix__configuration__parameter.MatrixCombinationsParameterDefinition plugin="matrix-combinations-parameter@1.0.9">
+          <name>COMBINATIONS</name>
+          <description></description>
+        </hudson.plugins.matrix__configuration__parameter.MatrixCombinationsParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  {{ scm(github_repository, scm_credentials)|indent(2) }}
+  {{ builders(set_commit_status, command)|indent(2) }}
+  {{ publishers(artefacts, test_results, cobertura_report)|indent(2) }}
+  <axes>
+    {% for name, values in axis|dictsort %}
+    <hudson.matrix.TextAxis>
+      <name>{{ name }}</name>
+      <values>
+        {% for value in values %}
+        <string>{{ value }}</string>
+        {% endfor %}
+      </values>
+    </hudson.matrix.TextAxis>
+    {% endfor %}
+    {% if assigned_node is defined %}
+    <hudson.matrix.LabelAxis>
+      <name>NODE</name>
+      <values>
+        <string>{{ assigned_node }}</string>
+      </values>
+    </hudson.matrix.LabelAxis>
+    {% endif %}
+  </axes>
+  <executionStrategy class="hudson.matrix.DefaultMatrixExecutionStrategyImpl">
+    <runSequentially>false</runSequentially>
+  </executionStrategy>
+</matrix-project>

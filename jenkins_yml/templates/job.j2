@@ -1,0 +1,186 @@
+{% macro base(node, build_name, description) %}
+<actions/>
+<description>{{ description }}</description>
+<keepDependencies>false</keepDependencies>
+{% if node is defined %}
+<assignedNode>{{ node }}</assignedNode>
+{% endif %}
+<canRoam>false</canRoam>
+<disabled>false</disabled>
+<blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+<blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+<triggers>
+  <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.19.1">
+    <spec></spec>
+  </com.cloudbees.jenkins.GitHubPushTrigger>
+</triggers>
+<concurrentBuild>true</concurrentBuild>
+<buildWrappers>
+  <org.jenkinsci.plugins.buildnamesetter.BuildNameSetter plugin="build-name-setter@1.6.5">
+    <template>{{ build_name }}</template>
+    <runAtStart>true</runAtStart>
+    <runAtEnd>true</runAtEnd>
+  </org.jenkinsci.plugins.buildnamesetter.BuildNameSetter>
+</buildWrappers>
+{% endmacro %}
+
+{% macro baseparameters() %}
+<hudson.model.StringParameterDefinition>
+  <name>REVISION</name>
+  <description></description>
+  <defaultValue>**</defaultValue>
+</hudson.model.StringParameterDefinition>
+{% endmacro %}
+
+{% macro baseproperties(blocking_jobs, github_repository) %}
+<hudson.plugins.buildblocker.BuildBlockerProperty plugin="build-blocker-plugin@1.7.3">
+  <useBuildBlocker>{% if blocking_jobs %}true{% else %}false{% endif %}</useBuildBlocker>
+  <blockLevel>NODE</blockLevel>
+  <scanQueueFor>DISABLED</scanQueueFor>
+  <blockingJobs>{{ blocking_jobs or '' }}</blockingJobs>
+</hudson.plugins.buildblocker.BuildBlockerProperty>
+{% if github_repository is defined %}
+<com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.17.0">
+  <projectUrl>{{ github_repository }}</projectUrl>
+  <displayName></displayName>
+</com.coravy.hudson.plugins.github.GithubProjectProperty>
+{% endif %}
+<jenkins.model.BuildDiscarderProperty>
+  <strategy class="hudson.tasks.LogRotator">
+    <daysToKeep>-1</daysToKeep>
+    <numToKeep>60</numToKeep>
+    <artifactDaysToKeep>-1</artifactDaysToKeep>
+    <artifactNumToKeep>-1</artifactNumToKeep>
+  </strategy>
+</jenkins.model.BuildDiscarderProperty>
+{% endmacro %}
+
+{% macro builders(set_commit_status, command) %}
+<builders>
+  {% if set_commit_status|default(False) %}
+  <com.cloudbees.jenkins.GitHubSetCommitStatusBuilder plugin="github@1.19.1">
+    <statusMessage>
+      <content/>
+    </statusMessage>
+  </com.cloudbees.jenkins.GitHubSetCommitStatusBuilder>
+  {% endif %}
+  <hudson.tasks.Shell>
+    <command>{{ command }}</command>
+  </hudson.tasks.Shell>
+</builders>
+{% endmacro %}
+
+{% macro publishers(artefacts, test_results, cobertura_report) %}
+<publishers>
+  {% if artefacts is defined %}
+  <hudson.tasks.ArtifactArchiver>
+    <artifacts>{{ artefacts }}</artifacts>
+    <allowEmptyArchive>true</allowEmptyArchive>
+    <onlyIfSuccessful>false</onlyIfSuccessful>
+    <fingerprint>false</fingerprint>
+    <defaultExcludes>true</defaultExcludes>
+    <caseSensitive>false</caseSensitive>
+  </hudson.tasks.ArtifactArchiver>
+  {% endif %}
+  {% if test_results is defined %}
+  <hudson.tasks.junit.JUnitResultArchiver plugin="junit@1.13">
+    <testResults>{{ test_results }}</testResults>
+    <keepLongStdio>false</keepLongStdio>
+    <healthScaleFactor>1.0</healthScaleFactor>
+    <allowEmptyResults>false</allowEmptyResults>
+  </hudson.tasks.junit.JUnitResultArchiver>
+  {% endif %}
+  {% if cobertura_report is defined %}
+  <hudson.plugins.cobertura.CoberturaPublisher plugin="cobertura@1.9.8">
+    <coberturaReportFile>{{ covertura_report }}</coberturaReportFile>
+    <onlyStable>false</onlyStable>
+    <failUnhealthy>false</failUnhealthy>
+    <failUnstable>false</failUnstable>
+    <autoUpdateHealth>false</autoUpdateHealth>
+    <autoUpdateStability>false</autoUpdateStability>
+    <zoomCoverageChart>false</zoomCoverageChart>
+    <maxNumberOfBuilds>0</maxNumberOfBuilds>
+    <failNoReports>true</failNoReports>
+    <healthyTarget>
+      <targets class="enum-map" enum-type="hudson.plugins.cobertura.targets.CoverageMetric">
+        <entry>
+          <hudson.plugins.cobertura.targets.CoverageMetric>METHOD</hudson.plugins.cobertura.targets.CoverageMetric>
+          <int>8000000</int>
+        </entry>
+        <entry>
+          <hudson.plugins.cobertura.targets.CoverageMetric>LINE</hudson.plugins.cobertura.targets.CoverageMetric>
+          <int>8000000</int>
+        </entry>
+        <entry>
+          <hudson.plugins.cobertura.targets.CoverageMetric>CONDITIONAL</hudson.plugins.cobertura.targets.CoverageMetric>
+          <int>7000000</int>
+        </entry>
+      </targets>
+    </healthyTarget>
+    <unhealthyTarget>
+      <targets class="enum-map" enum-type="hudson.plugins.cobertura.targets.CoverageMetric">
+        <entry>
+          <hudson.plugins.cobertura.targets.CoverageMetric>METHOD</hudson.plugins.cobertura.targets.CoverageMetric>
+          <int>0</int>
+        </entry>
+        <entry>
+          <hudson.plugins.cobertura.targets.CoverageMetric>LINE</hudson.plugins.cobertura.targets.CoverageMetric>
+          <int>0</int>
+        </entry>
+        <entry>
+          <hudson.plugins.cobertura.targets.CoverageMetric>CONDITIONAL</hudson.plugins.cobertura.targets.CoverageMetric>
+          <int>0</int>
+        </entry>
+      </targets>
+    </unhealthyTarget>
+    <failingTarget>
+      <targets class="enum-map" enum-type="hudson.plugins.cobertura.targets.CoverageMetric">
+        <entry>
+          <hudson.plugins.cobertura.targets.CoverageMetric>METHOD</hudson.plugins.cobertura.targets.CoverageMetric>
+          <int>0</int>
+        </entry>
+        <entry>
+          <hudson.plugins.cobertura.targets.CoverageMetric>LINE</hudson.plugins.cobertura.targets.CoverageMetric>
+          <int>0</int>
+        </entry>
+        <entry>
+          <hudson.plugins.cobertura.targets.CoverageMetric>CONDITIONAL</hudson.plugins.cobertura.targets.CoverageMetric>
+          <int>0</int>
+        </entry>
+      </targets>
+    </failingTarget>
+    <sourceEncoding>ASCII</sourceEncoding>
+  </hudson.plugins.cobertura.CoberturaPublisher>
+  {% endif %}
+</publishers>
+{% endmacro %}
+
+{% macro scm(github_repository, credentials) %}
+{% if github_repository is defined %}
+<scm class="hudson.plugins.git.GitSCM" plugin="git@2.4.2">
+  <configVersion>2</configVersion>
+  <userRemoteConfigs>
+    <hudson.plugins.git.UserRemoteConfig>
+      <url>{{ github_repository }}.git</url>
+      <credentialsId>{{ credentials }}</credentialsId>
+    </hudson.plugins.git.UserRemoteConfig>
+  </userRemoteConfigs>
+  <branches>
+    <hudson.plugins.git.BranchSpec>
+      <name>${REVISION}</name>
+    </hudson.plugins.git.BranchSpec>
+  </branches>
+  <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+  <submoduleCfg class="list"/>
+  <extensions>
+    <hudson.plugins.git.extensions.impl.PruneStaleBranch/>
+    <hudson.plugins.git.extensions.impl.SubmoduleOption>
+      <disableSubmodules>false</disableSubmodules>
+      <recursiveSubmodules>true</recursiveSubmodules>
+      <trackingSubmodules>false</trackingSubmodules>
+      <reference></reference>
+    </hudson.plugins.git.extensions.impl.SubmoduleOption>
+  </extensions>
+</scm>
+{% endif %}
+{% endmacro %}
