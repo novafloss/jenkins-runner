@@ -4,8 +4,14 @@
  Define jobs from project
 ==========================
 
-``jenkins-yml`` is a test runner that reads tests commands from source checkout
-rather than jenkins configuration.
+Render Jenkins job and execute comment from ``jenkins.yml``. These two steps
+are completely independant.
+
+``jenkins_yml`` provide a python API to render a Jenkins job XML config from a
+YAML payload. It does not manage Jenkins I/O to effectively create the job.
+
+Finally, ``jenkins_yml`` provide a simple CLI script to executes de tests
+commands from ``jenkins.yml``.
 
 
 Setup

@@ -12,6 +12,7 @@ setup(
     },
     extras_require={
         'release': ['wheel', 'zest.releaser'],
+        'renderer': ['jinja2'],
     },
     install_requires=[
         'pyyaml',
