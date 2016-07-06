@@ -23,8 +23,14 @@ Put a ``jenkins.yml`` file at the root of the project. This file contains a
 mapping of ``JOB_NAME`` to scripts. For example::
 
 
-  app-tests: |
-    tox -r
+  app-lint: |
+    flake8 app/
+
+  app-tests:
+    axis:
+      TOXENV: [py27, py34, py35]
+    script: |
+      tox -r
 
   app-doc:
     script: |

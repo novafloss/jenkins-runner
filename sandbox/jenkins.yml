@@ -16,3 +16,10 @@ overwrite-runner:
   runner: unconfined
   script: |
     : $JOB_NAME
+
+matrix:
+  axis:
+    AXE1: [a, b]
+  script: |
+    : $JOB_NAME
+    : $AXE1
