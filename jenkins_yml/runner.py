@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def call_runner(runner, config):
-    for ep in pkg_resources.iter_entry_points(__name__ + '.runners'):
+    for ep in pkg_resources.iter_entry_points('jenkins_yml.runners'):
         if ep.name != runner:
             continue
         runner = ep.load()
