@@ -35,6 +35,7 @@ def console_script():
     if not name:
         logger.error("JOB_NAME required.")
         sys.exit(1)
+    name, _ = name.split('/', 1)
 
     if not os.path.exists('jenkins.yml'):
         logger.warn("Missing jenkins.yml. Skipping this commit.")
