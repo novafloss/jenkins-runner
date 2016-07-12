@@ -1,0 +1,16 @@
+{% from 'job.j2' import base, baseparameters, baseproperties, builders, publishers, scm %}
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  {{ base(node, description, build_name) }}
+  <properties>
+    {{ baseproperties(blocking_jobs)|indent(4) }}
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        {{ baseparameters()|indent(8) }}
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  {{ scm(github_repository, scm_credentials)|indent(2) }}
+  {{ builders(set_commit_status, command)|indent(2) }}
+  {{ publishers(artefacts, test_results, cobertura_report)|indent(2) }}
+</project>

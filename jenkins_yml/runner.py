@@ -3,14 +3,15 @@ import pkg_resources
 import os
 import stat
 import sys
-import yaml
+
+from .parser import Job
 
 
 logger = logging.getLogger(__name__)
 
 
 def call_runner(runner, config):
-    for ep in pkg_resources.iter_entry_points(__name__ + '.runners'):
+    for ep in pkg_resources.iter_entry_points('jenkins_yml.runners'):
         if ep.name != runner:
             continue
         runner = ep.load()
@@ -35,50 +36,49 @@ def console_script():
     if not name:
         logger.error("JOB_NAME required.")
         sys.exit(1)
+    name, _ = (name + '/').split('/', 1)
 
     if not os.path.exists('jenkins.yml'):
         logger.warn("Missing jenkins.yml. Skipping this commit.")
         sys.exit(0)
 
+    jobs = {}
     try:
-        config = yaml.load(open('jenkins.yml').read())
+        yml = open('jenkins.yml').read()
+        for job in Job.parse_all(yml):
+            jobs[job.name] = job
     except Exception:
         logger.exception("Failed to parse jenkins.yml.")
         sys.exit(1)
 
-    config = config.get(name)
-    if config is None:
+    if name not in jobs:
         logger.warn("Job not defined for this commit. Skipping.")
         sys.exit(0)
 
-    if isinstance(config, dict) and 'axis' in config:
-        for name, values in config['axis'].items():
+    job = jobs[name]
+    if 'axis' in job.params:
+        for name, values in job.params['axis'].items():
             if name not in os.environ:
                 logger.error("Missing axis %s value.", name)
                 sys.exit(1)
             current = os.environ[name]
+            values = {str(value) for value in values}
             if current not in values:
                 logger.warn("%s=%s not available. Skipping.", name, current)
                 sys.exit(0)
 
-    call_runner(os.environ.get('JENKINS_YML_RUNNER', 'unconfined'), config)
+    call_runner(os.environ.get('JENKINS_YML_RUNNER', 'unconfined'), job)
 
 
-def unconfined(config):
-    if isinstance(config, str):
-        config = dict(script=str(config))
-    elif not isinstance(config, dict):
-        logger.error("Invalid jenkins.yml.")
-        sys.exit(1)
-
+def unconfined(job):
     # The unconfined runner even allow to choose the runner right from the yml.
-    runner = config.pop('runner', None)
+    runner = job.params.pop('runner', None)
     if runner:
-        call_runner(runner, config)
+        call_runner(runner, job)
     else:
         logger.debug('Executing unconfined.')
 
-    script = config.get('script')
+    script = job.params.get('script')
     if not script:
         logger.error('Missing script.')
         sys.exit(1)
