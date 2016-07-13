@@ -18,6 +18,9 @@ setup(
         'pyyaml',
     ],
     packages=['jenkins_yml'],
+    package_data={
+        'jenkins_yml': ['templates/*'],
+    },
     description='Define Jenkins jobs from repository',
     author=u'Étienne BERSAC',
     author_email='etienne.bersac@people-doc.com',
