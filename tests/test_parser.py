@@ -43,3 +43,20 @@ class TestXml(TestCase):
         ))
         new = new.merge(job)
         assert {'val1', 'val2', 'val3'} == set(new.config['axis']['AXIS1'])
+
+    def test_parse_parameters(self):
+        from jenkins_yml import Job
+
+        xml = Job(name='freestyle', config=dict(
+            parameters=dict(PARAM1='default1'),
+        )).as_xml()
+
+        job = Job.from_xml('freestyle', xml)
+        assert 'default1' == job.config['parameters']['PARAM1']
+
+        new = Job.factory('freestyle', config=dict(
+            parameters=dict(PARAM2='default2'),
+        ))
+        new = new.merge(job)
+        assert 'default1' == new.config['parameters']['PARAM1']
+        assert 'default2' == new.config['parameters']['PARAM2']

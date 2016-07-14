@@ -24,7 +24,14 @@
 </buildWrappers>
 {% endmacro %}
 
-{% macro baseparameters() %}
+{% macro baseparameters(params) %}
+{% for name, default in params|dictsort %}
+<hudson.model.StringParameterDefinition>
+  <name>{{ name }}</name>
+  <description></description>
+  <defaultValue>{{ default }}</defaultValue>
+</hudson.model.StringParameterDefinition>
+{% endfor %}
 <hudson.model.StringParameterDefinition>
   <name>REVISION</name>
   <description></description>

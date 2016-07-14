@@ -6,7 +6,7 @@
     {{ baseproperties(blocking_jobs)|indent(4) }}
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
-        {{ baseparameters()|indent(8) }}
+        {{ baseparameters(parameters)|indent(8) }}
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
   </properties>

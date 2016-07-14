@@ -26,6 +26,7 @@ class Job(object):
         build_name='#${BUILD_NUMBER} on ${GIT_BRANCH}',
         command='jenkins-yml-runner',
         description='Job defined from jenkins.yml.',
+        parameters={},
     )
 
     @classmethod
@@ -45,6 +46,15 @@ class Job(object):
             config['axis'][axis_name] = values = []
             for value in axis.findall('values/*'):
                 values.append(value.text)
+
+        xpath = './/hudson.model.StringParameterDefinition'
+        for param in xml.findall(xpath):
+            param_name = param.find('name').text
+            if 'REVISION' == param_name:
+                continue
+            default = param.find('defaultValue').text
+            config['parameters'][param_name] = default
+
         return cls.factory(name, config)
 
     @classmethod
@@ -76,6 +86,11 @@ class Job(object):
             config['axis'][axis] = sorted(
                 set(values) | set(other.config['axis'].get(axis, []))
             )
+
+        config['parameters'] = dict(
+            other.config['parameters'], **self.config['parameters']
+        )
+
         return self.factory(self.name, config)
 
     def as_dict(self):

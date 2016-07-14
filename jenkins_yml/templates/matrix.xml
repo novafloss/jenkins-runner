@@ -6,7 +6,7 @@
     {{ baseproperties(blocking_jobs)|indent(4) }}
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
-        {{ baseparameters()|indent(8) }}
+        {{ baseparameters(parameters)|indent(8) }}
         <hudson.plugins.matrix__configuration__parameter.MatrixCombinationsParameterDefinition plugin="matrix-combinations-parameter@1.0.9">
           <name>COMBINATIONS</name>
           <description></description>
