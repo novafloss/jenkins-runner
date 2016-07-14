@@ -23,3 +23,9 @@ matrix:
   script: |
     : $JOB_NAME
     : $AXE1
+
+parameterized:
+  parameters:
+    PARAM1: default1
+  script: |
+    : ${PARAM1-UNDEF}

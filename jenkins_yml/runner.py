@@ -93,10 +93,11 @@ def unconfined(job):
             stat.S_IREAD | stat.S_IWUSR | stat.S_IXUSR
         )
 
+    environ = dict(job.config['parameters'], **os.environ)
     os.execle(
         script_name,
         dict(
-            os.environ,
+            environ,
             CI='1',
         )
     )

@@ -25,5 +25,8 @@ AXE1=a JOB_NAME=matrix jenkins-yml-runner
 AXE1=b JOB_NAME=matrix jenkins-yml-runner
 AXE1=inexistant JOB_NAME=matrix jenkins-yml-runner
 ! MISSING_AXE1= JOB_NAME=matrix jenkins-yml-runner
+MISSING_PARAM1= JOB_NAME=parameterized jenkins-yml-runner |& grep -C 10 default1
+PARAM1=custom1 JOB_NAME=parameterized jenkins-yml-runner |& grep -C 10 custom1
+
 
 : SUCCESS
