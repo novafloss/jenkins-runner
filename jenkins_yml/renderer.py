@@ -16,7 +16,7 @@ JINJA = jinja2.Environment(
 
 def render(job, current_xml):
     config = job.as_dict()
-    if 'axis' in config:
+    if config['axis']:
         template_name = 'matrix.xml'
         current_axises = {}
         if current_xml:

@@ -25,3 +25,21 @@ class TestYml(TestCase):
         assert 1 == len(jobs)
         job = jobs[0]
         assert 'slave1' == job.config['node']
+
+
+class TestXml(TestCase):
+    def test_parse_axis(self):
+        from jenkins_yml.parser import Job
+
+        xml = Job(name='freestyle', config=dict(
+            axis=dict(AXIS1=['val1', 'val2']),
+        )).as_xml()
+
+        job = Job.from_xml('freestyle', xml)
+        assert {'val1', 'val2'} == set(job.config['axis']['AXIS1'])
+
+        new = Job.factory('freestyle', config=dict(
+            axis=dict(AXIS1=['val2', 'val3']),
+        ))
+        new = new.merge(job)
+        assert {'val1', 'val2', 'val3'} == set(new.config['axis']['AXIS1'])
