@@ -1,12 +1,22 @@
 from copy import deepcopy
+import os.path
 import xml.etree.ElementTree as ET
 
 import yaml
 
 try:
-    from .renderer import render
+    import jinja2
 except ImportError:
-    render = None
+    JINJA = None
+else:
+    JINJA = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(
+            os.path.join(os.path.dirname(__file__), 'templates')
+        ),
+        lstrip_blocks=True,
+        trim_blocks=True,
+        undefined=jinja2.StrictUndefined,
+    )
 
 
 class Job(object):
@@ -71,7 +81,14 @@ class Job(object):
     def as_dict(self):
         return dict(deepcopy(self.config), name=self.name)
 
-    def as_xml(self, current_xml=None):
-        if not render:
+    def as_xml(self):
+        if not JINJA:
             raise RuntimeError("Missing render dependencies")
-        return render(self, current_xml)
+
+        config = self.as_dict()
+        if config['axis']:
+            template_name = 'matrix.xml'
+        else:
+            template_name = 'freestyle.xml'
+
+        return JINJA.get_template(template_name).render(**config)

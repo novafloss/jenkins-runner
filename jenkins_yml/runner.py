@@ -4,7 +4,7 @@ import os
 import stat
 import sys
 
-from .parser import Job
+from .job import Job
 
 
 logger = logging.getLogger(__name__)

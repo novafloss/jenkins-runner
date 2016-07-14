@@ -3,7 +3,7 @@ from unittest import TestCase
 
 class TestYml(TestCase):
     def test_empty_defaults(self):
-        from jenkins_yml.parser import Job
+        from jenkins_yml import Job
 
         yml = "freestyle: test command"
         jobs = list(Job.parse_all(yml))
@@ -13,7 +13,7 @@ class TestYml(TestCase):
         assert job.config
 
     def test_with_defaults(self):
-        from jenkins_yml.parser import Job
+        from jenkins_yml import Job
 
         yml = "freestyle: test command"
         defaults = dict(
@@ -29,7 +29,7 @@ class TestYml(TestCase):
 
 class TestXml(TestCase):
     def test_parse_axis(self):
-        from jenkins_yml.parser import Job
+        from jenkins_yml import Job
 
         xml = Job(name='freestyle', config=dict(
             axis=dict(AXIS1=['val1', 'val2']),
