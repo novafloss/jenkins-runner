@@ -10,7 +10,7 @@ class TestYml(TestCase):
         assert 1 == len(jobs)
         job = jobs[0]
         assert 'freestyle' == job.name
-        assert job.params
+        assert job.config
 
     def test_with_defaults(self):
         from jenkins_yml.parser import Job
@@ -24,4 +24,4 @@ class TestYml(TestCase):
         jobs = list(Job.parse_all(yml, defaults))
         assert 1 == len(jobs)
         job = jobs[0]
-        assert 'slave1' == job.params['node']
+        assert 'slave1' == job.config['node']

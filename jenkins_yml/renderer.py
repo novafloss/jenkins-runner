@@ -15,8 +15,8 @@ JINJA = jinja2.Environment(
 
 
 def render(job, current_xml):
-    params = job.as_dict()
-    if 'axis' in params:
+    config = job.as_dict()
+    if 'axis' in config:
         template_name = 'matrix.xml'
         current_axises = {}
         if current_xml:
@@ -26,13 +26,13 @@ def render(job, current_xml):
                 current_axises[axis_name] = values = []
                 for value in axis.findall('values/*'):
                     values.append(value.text)
-            for axis, values in params['axis'].items():
+            for axis, values in config['axis'].items():
                 current_axises[axis] = sorted(
                     set(values) | set(current_axises.get(axis, []))
                 )
 
-            params['axis'] = current_axises
+            config['axis'] = current_axises
     else:
         template_name = 'freestyle.xml'
 
-    return JINJA.get_template(template_name).render(**params)
+    return JINJA.get_template(template_name).render(**config)

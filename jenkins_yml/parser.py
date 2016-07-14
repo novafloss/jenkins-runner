@@ -9,7 +9,7 @@ except ImportError:
 
 
 class Job(object):
-    DEFAULTS_PARAMS = dict(
+    DEFAULTS_CONFIG = dict(
         blocking_jobs=None,
         build_name='#${BUILD_NUMBER} on ${GIT_BRANCH}',
         command='jenkins-yml-runner',
@@ -19,19 +19,19 @@ class Job(object):
     @classmethod
     def parse_all(cls, yml, defaults={}):
         config = yaml.load(yml)
-        for name, params in config.items():
-            yield cls.factory(name, params, defaults)
+        for name, config in config.items():
+            yield cls.factory(name, config, defaults)
 
     @classmethod
-    def factory(cls, name, params, defaults={}):
-        if isinstance(params, str):
-            params = dict(script=params)
-        params = dict(defaults, **params)
-        return cls(name, params)
+    def factory(cls, name, config, defaults={}):
+        if isinstance(config, str):
+            config = dict(script=config)
+        config = dict(defaults, **config)
+        return cls(name, config)
 
-    def __init__(self, name, params={}):
+    def __init__(self, name, config={}):
         self.name = name
-        self.params = dict(self.DEFAULTS_PARAMS, **params)
+        self.config = dict(self.DEFAULTS_CONFIG, **config)
 
     def __repr__(self):
         return '<%s %s>' % (self.__class__.__name__, self.name)
@@ -46,7 +46,7 @@ class Job(object):
         return hash(str(self))
 
     def as_dict(self):
-        return dict(deepcopy(self.params), name=self.name)
+        return dict(deepcopy(self.config), name=self.name)
 
     def as_xml(self, current_xml=None):
         if not render:

@@ -56,8 +56,8 @@ def console_script():
         sys.exit(0)
 
     job = jobs[name]
-    if 'axis' in job.params:
-        for name, values in job.params['axis'].items():
+    if 'axis' in job.config:
+        for name, values in job.config['axis'].items():
             if name not in os.environ:
                 logger.error("Missing axis %s value.", name)
                 sys.exit(1)
@@ -72,13 +72,13 @@ def console_script():
 
 def unconfined(job):
     # The unconfined runner even allow to choose the runner right from the yml.
-    runner = job.params.pop('runner', None)
+    runner = job.config.pop('runner', None)
     if runner:
         call_runner(runner, job)
     else:
         logger.debug('Executing unconfined.')
 
-    script = job.params.get('script')
+    script = job.config.get('script')
     if not script:
         logger.error('Missing script.')
         sys.exit(1)

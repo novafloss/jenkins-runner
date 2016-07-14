@@ -13,7 +13,7 @@ class TestFreestyle(TestCase):
     def test_with_defaults(self):
         from jenkins_yml.parser import Job
 
-        xml = Job(name='freestyle', params=dict(
+        xml = Job(name='freestyle', config=dict(
             github_repository='https://github.com/owner/repository',
             scm_credentials='github-https',
             node='slave1',
@@ -29,7 +29,7 @@ class TestMatrix(TestCase):
     def test_defaults(self):
         from jenkins_yml.parser import Job
 
-        xml = Job(name='freestyle', params=dict(
+        xml = Job(name='freestyle', config=dict(
             axis=dict(
                 AXIS1=['val1', 'val2'],
             ),
@@ -44,14 +44,14 @@ class TestMatrix(TestCase):
     def test_axis_union(self):
         from jenkins_yml.parser import Job
 
-        master_xml = Job(name='freestyle', params=dict(
+        master_xml = Job(name='freestyle', config=dict(
             axis=dict(
                 AXIS1=['val1', 'val2'],
             ),
             node='slave1',
         )).as_xml()
 
-        branch_xml = Job(name='freestyle', params=dict(
+        branch_xml = Job(name='freestyle', config=dict(
             axis=dict(
                 AXIS1=['val2', 'val3'],
             ),
