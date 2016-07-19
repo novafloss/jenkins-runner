@@ -1,12 +1,22 @@
 {% from 'job.j2' import base, baseparameters, baseproperties, builders, publishers, scm %}
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
-  {{ base(node, build_name, description) }}
+  {{ base(undefined, build_name, description) }}
   <properties>
     {{ baseproperties(blocking_jobs)|indent(4) }}
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
         {{ baseparameters(parameters)|indent(8) }}
+        {% if node is defined %}
+        <org.jvnet.jenkins.plugins.nodelabelparameter.LabelParameterDefinition plugin="nodelabelparameter@1.7.2">
+          <name>NODE</name>
+          <description></description>
+          <defaultValue>{{ node }}</defaultValue>
+          <allNodesMatchingLabel>false</allNodesMatchingLabel>
+          <triggerIfResult>allCases</triggerIfResult>
+          <nodeEligibility class="org.jvnet.jenkins.plugins.nodelabelparameter.node.AllNodeEligibility"/>
+        </org.jvnet.jenkins.plugins.nodelabelparameter.LabelParameterDefinition>
+        {% endif %}
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
   </properties>

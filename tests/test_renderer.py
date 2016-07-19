@@ -25,6 +25,7 @@ class TestFreestyle(TestCase):
         assert 'github-https' in xml
         assert 'owner/repository.git' in xml
         assert '${REVISION}' in xml
+        assert '>NODE<' in xml
         assert 'slave1' in xml
         assert 'PARAM1' in xml
         assert 'default1' in xml
