@@ -20,6 +20,7 @@ class TestFreestyle(TestCase):
             parameters=dict(
                 PARAM1='default1',
             ),
+            periodic='H 0 * * *',
         )).as_xml()
 
         assert 'github-https' in xml
@@ -29,6 +30,8 @@ class TestFreestyle(TestCase):
         assert 'slave1' in xml
         assert 'PARAM1' in xml
         assert 'default1' in xml
+        assert 'TimerTrigger' in xml
+        assert 'H 0 * * *' in xml
 
 
 class TestMatrix(TestCase):
@@ -38,6 +41,7 @@ class TestMatrix(TestCase):
         xml = Job(name='freestyle', config=dict(
             axis=dict(AXIS1=['val1', 'val2']),
             node='slave1',
+            periodic='H 0 * * *',
         )).as_xml()
 
         assert 'jenkins-yml-runner' in xml
@@ -46,3 +50,5 @@ class TestMatrix(TestCase):
         assert 'val1' in xml
         assert 'val2' in xml
         assert 'master' in xml
+        assert 'TimerTrigger' in xml
+        assert 'H 0 * * *' in xml
