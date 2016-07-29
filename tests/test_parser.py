@@ -48,6 +48,7 @@ class TestXml(TestCase):
         from jenkins_yml import Job
 
         xml = Job(name='freestyle', config=dict(
+            node='slave',
             parameters=dict(PARAM1='default1'),
         )).as_xml()
 
@@ -60,3 +61,5 @@ class TestXml(TestCase):
         new = new.merge(job)
         assert 'default1' == new.config['parameters']['PARAM1']
         assert 'default2' == new.config['parameters']['PARAM2']
+        assert 'NODE' not in new.config['parameters']
+        assert 'REVISION' not in new.config['parameters']

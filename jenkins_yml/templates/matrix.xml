@@ -28,11 +28,11 @@
       </values>
     </hudson.matrix.TextAxis>
     {% endfor %}
-    {% if assigned_node is defined %}
+    {% if node is defined %}
     <hudson.matrix.LabelAxis>
       <name>NODE</name>
       <values>
-        <string>{{ assigned_node }}</string>
+        <string>{{ node }}</string>
       </values>
     </hudson.matrix.LabelAxis>
     {% endif %}
