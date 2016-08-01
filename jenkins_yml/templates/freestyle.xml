@@ -1,7 +1,7 @@
 {% from 'job.j2' import base, baseparameters, baseproperties, builders, publishers, scm %}
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
-  {{ base(undefined, build_name, description) }}
+  {{ base(undefined, build_name, description, periodic) }}
   <properties>
     {{ baseproperties(blocking_jobs)|indent(4) }}
     <hudson.model.ParametersDefinitionProperty>

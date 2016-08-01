@@ -1,4 +1,4 @@
-{% macro base(node, build_name, description) %}
+{% macro base(node, build_name, description, periodic) %}
 <actions/>
 <description>{{ description }}</description>
 <keepDependencies>false</keepDependencies>
@@ -13,6 +13,11 @@
   <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.19.1">
     <spec></spec>
   </com.cloudbees.jenkins.GitHubPushTrigger>
+{% if periodic is defined %}
+  <hudson.triggers.TimerTrigger>
+    <spec>{{ periodic }}</spec>
+  </hudson.triggers.TimerTrigger>
+{% endif %}
 </triggers>
 <concurrentBuild>true</concurrentBuild>
 <buildWrappers>
