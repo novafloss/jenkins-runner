@@ -7,13 +7,14 @@
 <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
 <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
 <triggers>
-  <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.19.1">
-    <spec></spec>
-  </com.cloudbees.jenkins.GitHubPushTrigger>
 {% if periodic is defined %}
   <hudson.triggers.TimerTrigger>
     <spec>{{ periodic }}</spec>
   </hudson.triggers.TimerTrigger>
+{% else %}
+  <com.cloudbees.jenkins.GitHubPushTrigger plugin="github@1.19.1">
+    <spec></spec>
+  </com.cloudbees.jenkins.GitHubPushTrigger>
 {% endif %}
 </triggers>
 <concurrentBuild>true</concurrentBuild>
