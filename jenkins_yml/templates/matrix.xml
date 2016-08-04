@@ -29,11 +29,13 @@
       </values>
     </hudson.matrix.TextAxis>
     {% endfor %}
-    {% if node is defined %}
+    {% if merged_nodes is defined and merged_nodes %}
     <hudson.matrix.LabelAxis>
       <name>NODE</name>
       <values>
+        {% for node in merged_nodes %}
         <string>{{ node }}</string>
+        {% endfor %}
       </values>
     </hudson.matrix.LabelAxis>
     {% endif %}
