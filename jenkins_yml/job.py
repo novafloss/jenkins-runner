@@ -27,6 +27,7 @@ class Job(object):
         command='jenkins-yml-runner',
         description='Job defined from jenkins.yml.',
         parameters={},
+        merged_nodes=[],
     )
 
     @classmethod
@@ -41,11 +42,14 @@ class Job(object):
         if isinstance(xml, str):
             xml = ET.fromstring(xml)
 
-        for axis in xml.findall('./axes/*'):
+        for axis in xml.findall('./axes/hudson.matrix.TextAxis'):
             axis_name = axis.find('name').text
             config['axis'][axis_name] = values = []
             for value in axis.findall('values/*'):
                 values.append(value.text)
+
+        for axis in xml.findall('./axes/hudson.matrix.LabelAxis'):
+            config['merged_nodes'] = [e.text for e in axis.findall('values/*')]
 
         xpath = './/hudson.model.StringParameterDefinition'
         for param in xml.findall(xpath):
@@ -87,6 +91,14 @@ class Job(object):
                 set(values) | set(other.config['axis'].get(axis, []))
             )
 
+        merged_nodes = set(config['merged_nodes'])
+        if 'node' in config:
+            merged_nodes.add(config['node'])
+        if 'node' in other.config:
+            merged_nodes.add(other.config['node'])
+        merged_nodes |= set(other.config['merged_nodes'])
+        config['merged_nodes'] = list(merged_nodes)
+
         config['parameters'] = dict(
             other.config['parameters'], **self.config['parameters']
         )
@@ -94,7 +106,12 @@ class Job(object):
         return self.factory(self.name, config)
 
     def as_dict(self):
-        return dict(deepcopy(self.config), name=self.name)
+        config = dict(deepcopy(self.config), name=self.name)
+
+        if 'node' in config and not config['merged_nodes']:
+            config['merged_nodes'].append(config['node'])
+
+        return config
 
     def as_xml(self):
         if not JINJA:

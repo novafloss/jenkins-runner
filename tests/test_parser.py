@@ -31,18 +31,22 @@ class TestXml(TestCase):
     def test_parse_axis(self):
         from jenkins_yml import Job
 
-        xml = Job(name='freestyle', config=dict(
+        xml = Job(name='matrix', config=dict(
+            node='slave-legacy',
             axis=dict(AXIS1=['val1', 'val2']),
         )).as_xml()
 
-        job = Job.from_xml('freestyle', xml)
+        job = Job.from_xml('matrix', xml)
         assert {'val1', 'val2'} == set(job.config['axis']['AXIS1'])
 
-        new = Job.factory('freestyle', config=dict(
+        new = Job.factory('matrix', config=dict(
+            node='slave-ng',
             axis=dict(AXIS1=['val2', 'val3']),
         ))
         new = new.merge(job)
+
         assert {'val1', 'val2', 'val3'} == set(new.config['axis']['AXIS1'])
+        assert {'slave-legacy', 'slave-ng'} == set(new.config['merged_nodes'])
 
     def test_parse_parameters(self):
         from jenkins_yml import Job
