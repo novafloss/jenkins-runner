@@ -84,11 +84,36 @@ class Job(object):
     def __hash__(self):
         return hash(str(self))
 
+    def contains(self, other):
+        me = self.as_dict()
+        other = other.as_dict()
+        if not set(me['parameters']) >= set(other['parameters']):
+            return False
+
+        if not set(me['axis']) >= set(other['axis']):
+            return False
+
+        all_axis = set(me['axis']) | set(other['axis'])
+        for axis in all_axis:
+            mines = set(me['axis'].get(axis, []))
+            theirs = set(other['axis'].get(axis, []))
+            if not mines >= theirs:
+                return False
+
+        if all_axis:
+            # Care available nodes in Jenkins only for matrix jobs.
+            if not set(me['merged_nodes']) >= set(other['merged_nodes']):
+                return False
+
+        return True
+
     def merge(self, other):
         config = deepcopy(self.config)
-        for axis, values in config['axis'].items():
+        all_axis = set(self.config['axis']) | set(other.config['axis'])
+        for axis in all_axis:
             config['axis'][axis] = sorted(
-                set(values) | set(other.config['axis'].get(axis, []))
+                set(self.config['axis'].get(axis, [])) |
+                set(other.config['axis'].get(axis, []))
             )
 
         merged_nodes = set(config['merged_nodes'])
