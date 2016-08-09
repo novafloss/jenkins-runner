@@ -8,11 +8,11 @@
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
         {{ baseparameters(parameters)|indent(8) }}
-        {% if node is defined %}
+        {% if merged_nodes %}
         <org.jvnet.jenkins.plugins.nodelabelparameter.LabelParameterDefinition plugin="nodelabelparameter@1.7.2">
           <name>NODE</name>
           <description></description>
-          <defaultValue>{{ node }}</defaultValue>
+          <defaultValue>{{ node|default('') or '' }}</defaultValue>
           <allNodesMatchingLabel>false</allNodesMatchingLabel>
           <triggerIfResult>allCases</triggerIfResult>
           <nodeEligibility class="org.jvnet.jenkins.plugins.nodelabelparameter.node.AllNodeEligibility"/>
