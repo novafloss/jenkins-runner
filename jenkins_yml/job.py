@@ -108,25 +108,31 @@ class Job(object):
         return True
 
     def merge(self, other):
-        config = deepcopy(self.config)
-        all_axis = set(self.config['axis']) | set(other.config['axis'])
-        for axis in all_axis:
-            config['axis'][axis] = sorted(
-                set(self.config['axis'].get(axis, [])) |
-                set(other.config['axis'].get(axis, []))
-            )
-
-        merged_nodes = set(config['merged_nodes'])
-        if 'node' in config:
-            merged_nodes.add(config['node'])
-        if 'node' in other.config:
-            merged_nodes.add(other.config['node'])
-        merged_nodes |= set(other.config['merged_nodes'])
-        config['merged_nodes'] = list(merged_nodes)
+        config = deepcopy(other.config)
 
         config['parameters'] = dict(
             other.config['parameters'], **self.config['parameters']
         )
+
+        all_axis = set(self.config['axis']) | set(other.config['axis'])
+        for axis in all_axis:
+            all_values = (
+                self.config['axis'].get(axis, []) +
+                other.config['axis'].get(axis, [])
+            )
+            config['axis'][axis] = sorted({str(x) for x in all_values})
+
+        if all_axis:
+            merged_nodes = (
+                set(self.config['merged_nodes']) |
+                set(other.config['merged_nodes'])
+            )
+            if 'node' in self.config:
+                merged_nodes.add(self.config['node'])
+            if 'node' in other.config:
+                merged_nodes.add(other.config['node'])
+
+            config['merged_nodes'] = list(merged_nodes)
 
         return self.factory(self.name, config)
 
@@ -135,6 +141,10 @@ class Job(object):
 
         if 'node' in config and not config['merged_nodes']:
             config['merged_nodes'].append(config['node'])
+
+        if 'axis' in config:
+            for axis, values in config['axis'].items():
+                config['axis'][axis] = sorted([str(x) for x in values])
 
         return config
 
