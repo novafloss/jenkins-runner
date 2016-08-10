@@ -28,6 +28,20 @@ class TestYml(TestCase):
 
 
 class TestXml(TestCase):
+    def test_parse(self):
+        from jenkins_yml import Job
+
+        xml = Job(name='freestyle', config=dict(
+            github_repository='https://github.com/owner/repo',
+            scm_credentials='CREDS',
+            set_commit_status=True,
+        )).as_xml()
+
+        job = Job.from_xml('freestyle', xml)
+
+        assert 'CREDS' == job.config['scm_credentials']
+        assert job.config['set_commit_status']
+
     def test_parse_axis(self):
         from jenkins_yml import Job
 
