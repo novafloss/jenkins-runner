@@ -51,13 +51,35 @@ class Job(object):
         for axis in xml.findall('./axes/hudson.matrix.LabelAxis'):
             config['merged_nodes'] = [e.text for e in axis.findall('values/*')]
 
-        xpath = './/hudson.model.StringParameterDefinition'
+        parameters_tags = [
+            'StringParameterDefinition',
+            'TextParameterDefinition',
+        ]
+        xpath = './/parameterDefinitions/*'
         for param in xml.findall(xpath):
+            tag = param.tag.split('.')[-1]
+            if tag not in parameters_tags:
+                continue
+
             param_name = param.find('name').text
             if 'REVISION' == param_name:
                 continue
             default = param.find('defaultValue').text
             config['parameters'][param_name] = default
+
+        xpath = './scm/userRemoteConfigs/hudson.plugins.git.UserRemoteConfig'
+        gitinfo = xml.find(xpath)
+        if gitinfo:
+            url = gitinfo.find('url')
+            if url is not None:
+                config['github_repository'] = url.text.replace('.git', '')
+
+            creds_el = gitinfo.find('credentialsId')
+            if creds_el is not None:
+                config['scm_credentials'] = creds_el.text.strip()
+
+        xpath = './/com.cloudbees.jenkins.GitHubSetCommitStatusBuilder'
+        config['set_commit_status'] = bool(xml.findall(xpath))
 
         return cls.factory(name, config)
 
@@ -103,6 +125,10 @@ class Job(object):
         if all_axis:
             # Care available nodes in Jenkins only for matrix jobs.
             if not set(me['merged_nodes']) >= set(other['merged_nodes']):
+                return False
+        else:
+            # Else, only care that we have a node param.
+            if other['merged_nodes'] and not me['merged_nodes']:
                 return False
 
         return True
