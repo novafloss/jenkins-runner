@@ -50,6 +50,11 @@ class Job(object):
 
         for axis in xml.findall('./axes/hudson.matrix.LabelAxis'):
             config['merged_nodes'] = [e.text for e in axis.findall('values/*')]
+        else:
+            xpath = './/org.jvnet.jenkins.plugins.nodelabelparameter.LabelParameterDefinition'  # noqa
+            node_el = xml.find(xpath)
+            if node_el is not None:
+                config['node'] = node_el.find('defaultValue').text
 
         parameters_tags = [
             'StringParameterDefinition',
