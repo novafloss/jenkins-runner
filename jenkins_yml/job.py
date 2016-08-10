@@ -126,6 +126,10 @@ class Job(object):
             # Care available nodes in Jenkins only for matrix jobs.
             if not set(me['merged_nodes']) >= set(other['merged_nodes']):
                 return False
+        else:
+            # Else, only care that we have a node param.
+            if other['merged_nodes'] and not me['merged_nodes']:
+                return False
 
         return True
 

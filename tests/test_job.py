@@ -64,7 +64,15 @@ class TestContains(TestCase):
         assert merged_job.contains(current_job)
         assert merged_job.contains(new_job)
 
-    def test_nodes(self):
+    def test_freestyle_nodes(self):
+        from jenkins_yml import Job
+
+        current_job = Job('freestyle', config=dict(node='slave1'))
+        new_job = Job('freestyle', config=dict(node='slave2'))
+
+        assert current_job.contains(new_job)
+
+    def test_matrix_nodes(self):
         from jenkins_yml import Job
 
         current_job = Job('matrix', config=dict(
