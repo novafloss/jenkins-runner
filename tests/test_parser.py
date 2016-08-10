@@ -32,6 +32,7 @@ class TestXml(TestCase):
         from jenkins_yml import Job
 
         xml = Job(name='freestyle', config=dict(
+            node='slave',
             github_repository='https://github.com/owner/repo',
             scm_credentials='CREDS',
             set_commit_status=True,
@@ -41,6 +42,7 @@ class TestXml(TestCase):
 
         assert 'CREDS' == job.config['scm_credentials']
         assert job.config['set_commit_status']
+        assert 'slave' == job.config['node']
 
     def test_parse_axis(self):
         from jenkins_yml import Job
