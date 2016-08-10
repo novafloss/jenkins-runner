@@ -32,7 +32,7 @@
 <hudson.model.StringParameterDefinition>
   <name>{{ name }}</name>
   <description></description>
-  <defaultValue>{{ default }}</defaultValue>
+  <defaultValue>{{ default or '' }}</defaultValue>
 </hudson.model.StringParameterDefinition>
 {% endfor %}
 <hudson.model.StringParameterDefinition>
