@@ -34,6 +34,8 @@ class Job(object):
     def parse_all(cls, yml, defaults={}):
         config = yaml.load(yml)
         for name, config in config.items():
+            if 'stages' == name:
+                continue
             yield cls.factory(name, config, defaults)
 
     @classmethod

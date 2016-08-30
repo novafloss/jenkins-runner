@@ -26,6 +26,15 @@ class TestYml(TestCase):
         job = jobs[0]
         assert 'slave1' == job.config['node']
 
+    def test_stages(self):
+        from jenkins_yml import Job
+
+        yml = "job: test command\nstages: [test, deploy]"
+        jobs = list(Job.parse_all(yml))
+        assert 1 == len(jobs)
+        job = jobs[0]
+        assert 'job' == job.name
+
 
 class TestXml(TestCase):
     def test_parse(self):
