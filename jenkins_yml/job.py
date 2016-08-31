@@ -20,6 +20,8 @@ else:
 
 
 class Job(object):
+    WELL_KNOWN_KEYS = {'settings', 'stages'}
+
     DEFAULTS_CONFIG = dict(
         axis={},
         blocking_jobs=None,
@@ -34,7 +36,7 @@ class Job(object):
     def parse_all(cls, yml, defaults={}):
         config = yaml.load(yml)
         for name, config in config.items():
-            if 'stages' == name:
+            if name in cls.WELL_KNOWN_KEYS:
                 continue
             yield cls.factory(name, config, defaults)
 
