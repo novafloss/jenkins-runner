@@ -27,6 +27,7 @@ class Job(object):
         blocking_jobs=None,
         build_name='#${BUILD_NUMBER} on ${GIT_BRANCH}',
         command='jenkins-yml-runner',
+        default_revision='**',
         description='Job defined from jenkins.yml.',
         parameters={},
         merged_nodes=[],

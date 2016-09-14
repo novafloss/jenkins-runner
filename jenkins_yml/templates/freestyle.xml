@@ -7,7 +7,7 @@
     {{ baseproperties(blocking_jobs)|indent(4) }}
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
-        {{ baseparameters(parameters)|indent(8) }}
+        {{ baseparameters(default_revision, parameters)|indent(8) }}
         {% if merged_nodes %}
         <org.jvnet.jenkins.plugins.nodelabelparameter.LabelParameterDefinition plugin="nodelabelparameter@1.7.2">
           <name>NODE</name>
