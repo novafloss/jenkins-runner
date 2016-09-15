@@ -48,7 +48,8 @@ class Job(object):
         if isinstance(xml, str):
             xml = ET.fromstring(xml)
 
-        config['node_filter'] = xml.find('./assignedNode').text or ''
+        el = xml.find('./assignedNode')
+        config['node_filter'] = el.text or '' if el else ''
 
         for axis in xml.findall('./axes/hudson.matrix.TextAxis'):
             axis_name = axis.find('name').text
