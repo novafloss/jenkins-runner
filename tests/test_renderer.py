@@ -17,6 +17,7 @@ class TestFreestyle(TestCase):
             github_repository='https://github.com/owner/repository',
             scm_credentials='github-https',
             node='slave1',
+            node_filter='!windows',
             parameters=dict(
                 PARAM1='default1',
             ),
@@ -28,6 +29,7 @@ class TestFreestyle(TestCase):
         assert '${REVISION}' in xml
         assert '>NODE<' in xml
         assert 'slave1' in xml
+        assert '!windows' in xml
         assert 'PARAM1' in xml
         assert 'default1' in xml
         assert 'GitHubPushTrigger' in xml
