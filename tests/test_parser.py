@@ -101,4 +101,4 @@ class TestXml(TestCase):
         ).as_xml()
 
         job = Job.from_xml('freestyle', xml)
-        assert '!windows' == job.config['node_filter']
+        assert '!windows' == job.config['node_filter'], job.config
