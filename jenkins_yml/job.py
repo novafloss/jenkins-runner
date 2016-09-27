@@ -49,7 +49,7 @@ class Job(object):
             xml = ET.fromstring(xml)
 
         el = xml.find('./assignedNode')
-        config['node_filter'] = el.text or '' if el else ''
+        config['node_filter'] = el.text if el is not None else ''
 
         for axis in xml.findall('./axes/hudson.matrix.TextAxis'):
             axis_name = axis.find('name').text

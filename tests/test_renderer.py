@@ -32,13 +32,11 @@ class TestFreestyle(TestCase):
         assert '!windows' in xml
         assert 'PARAM1' in xml
         assert 'default1' in xml
-        assert 'GitHubPushTrigger' in xml
         assert 'TimerTrigger' not in xml
 
         config['periodic'] = 'H 0 * * *'
         xml = Job(name='freestyle', config=config).as_xml()
 
-        assert 'GitHubPushTrigger' not in xml
         assert 'TimerTrigger' in xml
         assert 'H 0 * * *' in xml
 
@@ -59,12 +57,10 @@ class TestMatrix(TestCase):
         assert 'val1' in xml
         assert 'val2' in xml
         assert 'master' in xml
-        assert 'GitHubPushTrigger' in xml
         assert 'TimerTrigger' not in xml
 
         config['periodic'] = 'H 0 * * *'
         xml = Job(name='freestyle', config=config).as_xml()
 
-        assert 'GitHubPushTrigger' not in xml
         assert 'TimerTrigger' in xml
         assert 'H 0 * * *' in xml
