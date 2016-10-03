@@ -106,6 +106,6 @@ def unconfined(job):
         dict(
             environ,
             CI='1',
-            CI_ARTEFACTS='_artefacts',
+            CI_ARTEFACTS=os.path.realpath('_artefacts'),
         )
     )

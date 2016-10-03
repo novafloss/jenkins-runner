@@ -124,7 +124,10 @@ class Job(object):
     def __init__(self, name, config={}, features=None):
         self.name = name
         self.config = dict(self.DEFAULTS_CONFIG, **config)
-        self.features = features or self.DEFAULTS_FEATURES
+        if features is None:
+            self.features = self.DEFAULTS_FEATURES
+        else:
+            self.features = features
 
     def __repr__(self):
         return '<%s %s>' % (self.__class__.__name__, self.name)
