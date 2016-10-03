@@ -19,6 +19,8 @@ JOB_NAME=undefined jenkins-yml-runner
 JOB_NAME=simple jenkins-yml-runner |& grep -C 10 simple
 ! JOB_NAME=missing-script jenkins-yml-runner
 JOB_NAME=script jenkins-yml-runner
+YML_SCRIPT=after_script JOB_NAME=script jenkins-yml-runner |& grep -C 10 after_script
+! YML_SCRIPT=hack_script JOB_NAME=script jenkins-yml-runner
 JOB_NAME=overwrite-runner jenkins-yml-runner
 ! JOB_NAME=overwrite-runner-inexistant jenkins-yml-runner
 AXE1=a JOB_NAME=matrix jenkins-yml-runner
