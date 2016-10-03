@@ -23,5 +23,5 @@
   </properties>
   {{ scm(github_repository, scm_credentials)|indent(2) }}
   {{ builders(set_commit_status, command)|indent(2) }}
-  {{ publishers(artefacts, test_results, cobertura_report)|indent(2) }}
+  {{ publishers(test_results, cobertura_report)|indent(2) }}
 </project>

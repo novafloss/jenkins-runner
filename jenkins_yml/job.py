@@ -36,6 +36,7 @@ class Job(object):
 
     DEFAULTS_FEATURES = {
         'after_script',
+        'artefacts',
     }
 
     @classmethod
@@ -106,6 +107,10 @@ class Job(object):
         after_script = el.text if el is not None else ''
         if "YML_SCRIPT=after_script jenkins-yml-runner" == after_script:
             features.add('after_script')
+
+        xpath = './/hudson.tasks.ArtifactArchiver/artifacts'
+        if xml.find(xpath) is not None:
+            features.add('artefacts')
 
         return cls.factory(name, config, features=features)
 
