@@ -37,6 +37,7 @@ class Job(object):
     DEFAULTS_FEATURES = {
         'after_script',
         'artefacts',
+        'reference',
     }
 
     @classmethod
@@ -111,6 +112,12 @@ class Job(object):
         xpath = './/hudson.tasks.ArtifactArchiver/artifacts'
         if xml.find(xpath) is not None:
             features.add('artefacts')
+
+        xpath = './/hudson.plugins.git.extensions.impl.CloneOption/reference'
+        el = xml.find(xpath)
+        path = el.text if el is not None else ''
+        if path.startswith('/var/lib/jenkins'):
+            features.add('reference')
 
         return cls.factory(name, config, features=features)
 

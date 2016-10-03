@@ -116,3 +116,13 @@ class TestXml(TestCase):
         xml = Job(name='freestyle').as_xml()
         job = Job.from_xml('freestyle', xml)
         assert 'artefacts' in job.features
+
+    def test_feature_reference(self):
+        from jenkins_yml import Job
+
+        xml = Job(name='freestyle', config=dict(
+            github_repository='https://github.com/owner/repo',
+            scm_credentials='creds',
+        )).as_xml()
+        job = Job.from_xml('freestyle', xml)
+        assert 'reference' in job.features
