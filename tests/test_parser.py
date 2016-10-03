@@ -102,3 +102,10 @@ class TestXml(TestCase):
 
         job = Job.from_xml('freestyle', xml)
         assert '!windows' == job.config['node_filter'], job.config
+
+    def test_feature_after_script(self):
+        from jenkins_yml import Job
+
+        xml = Job(name='freestyle').as_xml()
+        job = Job.from_xml('freestyle', xml)
+        assert 'after_script' in job.features

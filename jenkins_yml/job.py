@@ -34,6 +34,10 @@ class Job(object):
         node_filter='',
     )
 
+    DEFAULTS_FEATURES = {
+        'after_script',
+    }
+
     @classmethod
     def parse_all(cls, yml, defaults={}):
         config = yaml.load(yml)
@@ -95,18 +99,27 @@ class Job(object):
         xpath = './/com.cloudbees.jenkins.GitHubSetCommitStatusBuilder'
         config['set_commit_status'] = bool(xml.findall(xpath))
 
-        return cls.factory(name, config)
+        features = set()
+
+        xpath = './/hudson.plugins.postbuildtask.TaskProperties/script'
+        el = xml.find(xpath)
+        after_script = el.text if el is not None else ''
+        if "YML_SCRIPT=after_script jenkins-yml-runner" == after_script:
+            features.add('after_script')
+
+        return cls.factory(name, config, features=features)
 
     @classmethod
-    def factory(cls, name, config, defaults={}):
+    def factory(cls, name, config, defaults={}, features=None):
         if isinstance(config, str):
             config = dict(script=config)
         config = dict(defaults, **config)
-        return cls(name, config)
+        return cls(name, config, features)
 
-    def __init__(self, name, config={}):
+    def __init__(self, name, config={}, features=None):
         self.name = name
         self.config = dict(self.DEFAULTS_CONFIG, **config)
+        self.features = features or self.DEFAULTS_FEATURES
 
     def __repr__(self):
         return '<%s %s>' % (self.__class__.__name__, self.name)
@@ -121,29 +134,32 @@ class Job(object):
         return hash(str(self))
 
     def contains(self, other):
-        me = self.as_dict()
-        other = other.as_dict()
-        if not set(me['parameters']) >= set(other['parameters']):
+        my = self.as_dict()
+        their = other.as_dict()
+        if not set(my['parameters']) >= set(their['parameters']):
             return False
 
-        if not set(me['axis']) >= set(other['axis']):
+        if not set(my['axis']) >= set(their['axis']):
             return False
 
-        all_axis = set(me['axis']) | set(other['axis'])
+        all_axis = set(my['axis']) | set(their['axis'])
         for axis in all_axis:
-            mines = set(me['axis'].get(axis, []))
-            theirs = set(other['axis'].get(axis, []))
+            mines = set(my['axis'].get(axis, []))
+            theirs = set(their['axis'].get(axis, []))
             if not mines >= theirs:
                 return False
 
         if all_axis:
             # Care available nodes in Jenkins only for matrix jobs.
-            if not set(me['merged_nodes']) >= set(other['merged_nodes']):
+            if not set(my['merged_nodes']) >= set(their['merged_nodes']):
                 return False
         else:
             # Else, only care that we have a node param.
-            if other['merged_nodes'] and not me['merged_nodes']:
+            if their['merged_nodes'] and not my['merged_nodes']:
                 return False
+
+        if not self.features >= other.features:
+            return False
 
         return True
 
@@ -174,7 +190,8 @@ class Job(object):
 
             config['merged_nodes'] = list(merged_nodes)
 
-        return self.factory(self.name, config)
+        features = self.features | other.features
+        return self.factory(self.name, config, features=features)
 
     def as_dict(self):
         config = dict(deepcopy(self.config), name=self.name)

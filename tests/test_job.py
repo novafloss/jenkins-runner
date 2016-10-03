@@ -89,3 +89,16 @@ class TestContains(TestCase):
 
         assert merged_job.contains(current_job)
         assert merged_job.contains(new_job)
+
+    def test_features(self):
+        from jenkins_yml import Job
+
+        current_job = Job('job', features={'feat1'})
+        new_job = Job('job', features={'feat1', 'feat2'})
+
+        assert not current_job.contains(new_job)
+
+        merged_job = current_job.merge(new_job)
+
+        assert merged_job.contains(current_job)
+        assert merged_job.contains(new_job)
