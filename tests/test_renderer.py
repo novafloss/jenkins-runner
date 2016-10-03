@@ -21,6 +21,7 @@ class TestFreestyle(TestCase):
             parameters=dict(
                 PARAM1='default1',
             ),
+            after_script=': teardown'
         )
         xml = Job(name='freestyle', config=config).as_xml()
 
@@ -33,6 +34,8 @@ class TestFreestyle(TestCase):
         assert 'PARAM1' in xml
         assert 'default1' in xml
         assert 'TimerTrigger' not in xml
+        assert 'after_script' in xml
+        assert ': teardown' not in xml
 
         config['periodic'] = 'H 0 * * *'
         xml = Job(name='freestyle', config=config).as_xml()
