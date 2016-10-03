@@ -199,6 +199,13 @@
       <trackingSubmodules>false</trackingSubmodules>
       <reference></reference>
     </hudson.plugins.git.extensions.impl.SubmoduleOption>
+    <hudson.plugins.git.extensions.impl.CloneOption>
+      <shallow>false</shallow>
+      <noTags>false</noTags>
+      <reference>/var/lib/jenkins/references/{{ github_repository|replace('https://github.com/', '') }}</reference>
+      <depth>0</depth>
+      <honorRefspec>true</honorRefspec>
+    </hudson.plugins.git.extensions.impl.CloneOption>
   </extensions>
 </scm>
 {% endif %}
