@@ -109,3 +109,10 @@ class TestXml(TestCase):
         xml = Job(name='freestyle').as_xml()
         job = Job.from_xml('freestyle', xml)
         assert 'after_script' in job.features
+
+    def test_feature_artefacts(self):
+        from jenkins_yml import Job
+
+        xml = Job(name='freestyle').as_xml()
+        job = Job.from_xml('freestyle', xml)
+        assert 'artefacts' in job.features

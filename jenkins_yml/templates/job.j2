@@ -76,7 +76,7 @@
 </builders>
 {% endmacro %}
 
-{% macro publishers(artefacts, test_results, cobertura_report) %}
+{% macro publishers(test_results, cobertura_report) %}
 <publishers>
   <hudson.plugins.postbuildtask.PostbuildTask plugin="postbuild-task@1.8">
     <tasks>
@@ -93,16 +93,14 @@
       </hudson.plugins.postbuildtask.TaskProperties>
     </tasks>
   </hudson.plugins.postbuildtask.PostbuildTask>
-  {% if artefacts is defined %}
   <hudson.tasks.ArtifactArchiver>
-    <artifacts>{{ artefacts }}</artifacts>
+    <artifacts>_artefacts</artifacts>
     <allowEmptyArchive>true</allowEmptyArchive>
     <onlyIfSuccessful>false</onlyIfSuccessful>
     <fingerprint>false</fingerprint>
     <defaultExcludes>true</defaultExcludes>
     <caseSensitive>false</caseSensitive>
   </hudson.tasks.ArtifactArchiver>
-  {% endif %}
   {% if test_results is defined %}
   <hudson.tasks.junit.JUnitResultArchiver plugin="junit@1.13">
     <testResults>{{ test_results }}</testResults>

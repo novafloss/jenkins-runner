@@ -98,11 +98,14 @@ def unconfined(job):
             stat.S_IREAD | stat.S_IWUSR | stat.S_IXUSR
         )
 
+    os.makedirs('_artefacts', exist_ok=True)
+
     environ = dict(job.config['parameters'], **os.environ)
     os.execle(
         script_name,
         dict(
             environ,
             CI='1',
+            CI_ARTEFACTS='_artefacts',
         )
     )
