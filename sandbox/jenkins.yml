@@ -6,6 +6,8 @@ missing-script: {}
 script:
   script: |
     : $JOB_NAME
+  after_script: |
+    : after_$JOB_NAME
 
 overwrite-runner-inexistant:
   runner: inexistant

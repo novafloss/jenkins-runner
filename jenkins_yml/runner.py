@@ -78,7 +78,12 @@ def unconfined(job):
     else:
         logger.debug('Executing unconfined.')
 
-    script = job.config.get('script')
+    entry = os.environ.get('YML_SCRIPT', 'script')
+    if entry not in {'script', 'after_script'}:
+        logger.error('%r is not a valid YML entry.', entry)
+        sys.exit(1)
+
+    script = job.config.get(entry)
     if not script:
         logger.error('Missing script.')
         sys.exit(1)
