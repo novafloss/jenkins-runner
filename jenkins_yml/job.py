@@ -37,7 +37,9 @@ class Job(object):
     DEFAULTS_FEATURES = {
         'after_script',
         'artefacts',
+        'coverage',
         'reference',
+        'xunit',
     }
 
     @classmethod
