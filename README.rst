@@ -4,14 +4,39 @@
  Define jobs from project
 ==========================
 
-Render Jenkins job and execute comment from ``jenkins.yml``. These two steps
+Render Jenkins job and execute commands from ``jenkins.yml``. These two steps
 are completely independant.
 
 ``jenkins_yml`` provide a python API to render a Jenkins job XML config from a
-YAML payload. It does not manage Jenkins I/O to effectively create the job.
+YAML payload. It does not manage Jenkins I/O to effectively create the job. See
+`Jenkins EPO <https://github.com/novafloss/jenkins-epo>`_ to create jobs and
+schedule builds from GitHub.
 
-Finally, ``jenkins_yml`` provide a simple CLI script to executes de tests
-commands from ``jenkins.yml``.
+Finally, ``jenkins_yml`` provide a simple yet pluggable CLI script to executes
+de tests commands from ``jenkins.yml``.
+
+
+Jenkins Job features
+====================
+
+The purpose of Jenkins YML is not to expose all Jenkins features, but to setup
+a sane default set of features you expect from a CI, and ask you the question
+you value.
+
+- Define parameters and default values.
+- Define matrix job.
+- Define periodic job.
+- Target Jenkins node per **build**.
+- Search git clone reference in
+  ``/var/lib/jenkins/references/<owner>/<repository>/``. It's up to you to
+  create a mirror clone here or not.
+- Set GitHub commit status to pending.
+- Parameterized revision.
+- Define ``after_script``, always runned after build, even on abort.
+- Collect arctefacts from ``_artefacts/`` directory. Full path is available in
+  ``CI_ARTEFACTS`` env var.
+- JUnit support.
+- Coverage report support.
 
 
 Setup
