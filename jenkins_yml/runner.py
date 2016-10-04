@@ -98,7 +98,8 @@ def unconfined(job):
             stat.S_IREAD | stat.S_IWUSR | stat.S_IXUSR
         )
 
-    os.makedirs('_artefacts', exist_ok=True)
+    artefacts_dir = os.path.realpath('_ci')
+    os.makedirs(artefacts_dir, exist_ok=True)
 
     environ = dict(job.config['parameters'], **os.environ)
     os.execle(
@@ -106,6 +107,6 @@ def unconfined(job):
         dict(
             environ,
             CI='1',
-            CI_ARTEFACTS=os.path.realpath('_artefacts'),
+            CI_ARTEFACTS=artefacts_dir,
         )
     )

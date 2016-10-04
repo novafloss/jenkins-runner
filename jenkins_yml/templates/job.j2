@@ -76,7 +76,7 @@
 </builders>
 {% endmacro %}
 
-{% macro publishers(test_results, cobertura_report) %}
+{% macro publishers() %}
 <publishers>
   <hudson.plugins.postbuildtask.PostbuildTask plugin="postbuild-task@1.8">
     <tasks>
@@ -94,24 +94,21 @@
     </tasks>
   </hudson.plugins.postbuildtask.PostbuildTask>
   <hudson.tasks.ArtifactArchiver>
-    <artifacts>_artefacts/*,_artefacts/*/*,_artefacts/*/*/*</artifacts>
+    <artifacts>_ci/*,_ci/*/*,_ci/*/*/*</artifacts>
     <allowEmptyArchive>true</allowEmptyArchive>
     <onlyIfSuccessful>false</onlyIfSuccessful>
     <fingerprint>false</fingerprint>
     <defaultExcludes>true</defaultExcludes>
     <caseSensitive>false</caseSensitive>
   </hudson.tasks.ArtifactArchiver>
-  {% if test_results is defined %}
   <hudson.tasks.junit.JUnitResultArchiver plugin="junit@1.13">
-    <testResults>{{ test_results }}</testResults>
+    <testResults>_ci/xunit*.xml</testResults>
     <keepLongStdio>false</keepLongStdio>
     <healthScaleFactor>1.0</healthScaleFactor>
-    <allowEmptyResults>false</allowEmptyResults>
+    <allowEmptyResults>true</allowEmptyResults>
   </hudson.tasks.junit.JUnitResultArchiver>
-  {% endif %}
-  {% if cobertura_report is defined %}
   <hudson.plugins.cobertura.CoberturaPublisher plugin="cobertura@1.9.8">
-    <coberturaReportFile>{{ covertura_report }}</coberturaReportFile>
+    <coberturaReportFile>coverage.xml</coberturaReportFile>
     <onlyStable>false</onlyStable>
     <failUnhealthy>false</failUnhealthy>
     <failUnstable>false</failUnstable>
@@ -119,7 +116,7 @@
     <autoUpdateStability>false</autoUpdateStability>
     <zoomCoverageChart>false</zoomCoverageChart>
     <maxNumberOfBuilds>0</maxNumberOfBuilds>
-    <failNoReports>true</failNoReports>
+    <failNoReports>false</failNoReports>
     <healthyTarget>
       <targets class="enum-map" enum-type="hudson.plugins.cobertura.targets.CoverageMetric">
         <entry>
@@ -170,7 +167,6 @@
     </failingTarget>
     <sourceEncoding>ASCII</sourceEncoding>
   </hudson.plugins.cobertura.CoberturaPublisher>
-  {% endif %}
 </publishers>
 {% endmacro %}
 
