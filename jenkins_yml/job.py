@@ -119,6 +119,10 @@ class Job(object):
         if path.startswith('/var/lib/jenkins'):
             features.add('reference')
 
+        el = xml.find('.//hudson.tasks.junit.JUnitResultArchiver')
+        if el is not None:
+            features.add('xunit')
+
         return cls.factory(name, config, features=features)
 
     @classmethod

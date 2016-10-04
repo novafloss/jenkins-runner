@@ -76,7 +76,7 @@
 </builders>
 {% endmacro %}
 
-{% macro publishers(test_results, cobertura_report) %}
+{% macro publishers(cobertura_report) %}
 <publishers>
   <hudson.plugins.postbuildtask.PostbuildTask plugin="postbuild-task@1.8">
     <tasks>
@@ -101,14 +101,12 @@
     <defaultExcludes>true</defaultExcludes>
     <caseSensitive>false</caseSensitive>
   </hudson.tasks.ArtifactArchiver>
-  {% if test_results is defined %}
   <hudson.tasks.junit.JUnitResultArchiver plugin="junit@1.13">
-    <testResults>{{ test_results }}</testResults>
+    <testResults>_ci/xunit*.xml</testResults>
     <keepLongStdio>false</keepLongStdio>
     <healthScaleFactor>1.0</healthScaleFactor>
-    <allowEmptyResults>false</allowEmptyResults>
+    <allowEmptyResults>true</allowEmptyResults>
   </hudson.tasks.junit.JUnitResultArchiver>
-  {% endif %}
   {% if cobertura_report is defined %}
   <hudson.plugins.cobertura.CoberturaPublisher plugin="cobertura@1.9.8">
     <coberturaReportFile>{{ covertura_report }}</coberturaReportFile>
