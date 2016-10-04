@@ -103,19 +103,16 @@ class TestXml(TestCase):
         job = Job.from_xml('freestyle', xml)
         assert '!windows' == job.config['node_filter'], job.config
 
-    def test_feature_after_script(self):
+    def test_feature_base_features(self):
         from jenkins_yml import Job
 
         xml = Job(name='freestyle').as_xml()
         job = Job.from_xml('freestyle', xml)
+
         assert 'after_script' in job.features
-
-    def test_feature_artefacts(self):
-        from jenkins_yml import Job
-
-        xml = Job(name='freestyle').as_xml()
-        job = Job.from_xml('freestyle', xml)
         assert 'artefacts' in job.features
+        assert 'xunit' in job.features
+        assert 'coverage' in job.features
 
     def test_feature_reference(self):
         from jenkins_yml import Job
