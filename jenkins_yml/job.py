@@ -123,6 +123,10 @@ class Job(object):
         if el is not None:
             features.add('xunit')
 
+        el = xml.find('.//hudson.plugins.cobertura.CoberturaPublisher')
+        if el is not None:
+            features.add('coverage')
+
         return cls.factory(name, config, features=features)
 
     @classmethod

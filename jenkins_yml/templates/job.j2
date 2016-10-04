@@ -76,7 +76,7 @@
 </builders>
 {% endmacro %}
 
-{% macro publishers(cobertura_report) %}
+{% macro publishers() %}
 <publishers>
   <hudson.plugins.postbuildtask.PostbuildTask plugin="postbuild-task@1.8">
     <tasks>
@@ -107,9 +107,8 @@
     <healthScaleFactor>1.0</healthScaleFactor>
     <allowEmptyResults>true</allowEmptyResults>
   </hudson.tasks.junit.JUnitResultArchiver>
-  {% if cobertura_report is defined %}
   <hudson.plugins.cobertura.CoberturaPublisher plugin="cobertura@1.9.8">
-    <coberturaReportFile>{{ covertura_report }}</coberturaReportFile>
+    <coberturaReportFile>coverage.xml</coberturaReportFile>
     <onlyStable>false</onlyStable>
     <failUnhealthy>false</failUnhealthy>
     <failUnstable>false</failUnstable>
@@ -117,7 +116,7 @@
     <autoUpdateStability>false</autoUpdateStability>
     <zoomCoverageChart>false</zoomCoverageChart>
     <maxNumberOfBuilds>0</maxNumberOfBuilds>
-    <failNoReports>true</failNoReports>
+    <failNoReports>false</failNoReports>
     <healthyTarget>
       <targets class="enum-map" enum-type="hudson.plugins.cobertura.targets.CoverageMetric">
         <entry>
@@ -168,7 +167,6 @@
     </failingTarget>
     <sourceEncoding>ASCII</sourceEncoding>
   </hudson.plugins.cobertura.CoberturaPublisher>
-  {% endif %}
 </publishers>
 {% endmacro %}
 
