@@ -55,7 +55,6 @@ class TestMatrix(TestCase):
         xml = Job(name='freestyle', config=config).as_xml()
 
         assert 'jenkins-yml-runner' in xml
-        assert 'test command' not in xml
         assert 'AXIS1' in xml
         assert 'val1' in xml
         assert 'val2' in xml

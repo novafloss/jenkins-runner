@@ -16,7 +16,7 @@
     </hudson.model.ParametersDefinitionProperty>
   </properties>
   {{ scm(github_repository, scm_credentials)|indent(2) }}
-  {{ builders(set_commit_status, command)|indent(2) }}
+  {{ builders(set_commit_status)|indent(2) }}
   {{ publishers()|indent(2) }}
   <axes>
     {% for name, values in axis|dictsort %}
