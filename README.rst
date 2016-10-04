@@ -24,7 +24,7 @@ a sane default set of features you expect from a CI, and ask you the question
 you value.
 
 - Define parameters and default values.
-- Define matrix job.
+- Define matrix job axis.
 - Define periodic job.
 - Target Jenkins node per **build**.
 - Search git clone reference in
@@ -33,10 +33,10 @@ you value.
 - Set GitHub commit status to pending.
 - Parameterized revision.
 - Define ``after_script``, always runned after build, even on abort.
-- Collect arctefacts from ``_artefacts/`` directory. Full path is available in
+- Collect arctefacts from ``_ci/`` directory. Full path is available in
   ``CI_ARTEFACTS`` env var.
-- JUnit support.
-- Coverage report support.
+- Reads XUnit XML from ``_ci/xunit*.xml``.
+- Reads coverage report from ``coverage.xml``.
 
 
 Setup
