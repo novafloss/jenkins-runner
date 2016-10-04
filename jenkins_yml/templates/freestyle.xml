@@ -1,7 +1,7 @@
 {% from 'job.j2' import base, baseparameters, baseproperties, builders, publishers, scm %}
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
-  <assignedNode>{{ node_filter }}</assignedNode>
+  <assignedNode/>
   {{ base(build_name, description, periodic) }}
   <properties>
     {{ baseproperties(blocking_jobs)|indent(4) }}
