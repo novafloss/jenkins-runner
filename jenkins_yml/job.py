@@ -30,7 +30,6 @@ class Job(object):
         description='Job defined from jenkins.yml.',
         parameters={},
         merged_nodes=[],
-        node_filter='',
     )
 
     DEFAULTS_FEATURES = {
@@ -54,9 +53,6 @@ class Job(object):
         config = dict(axis={}, parameters={})
         if isinstance(xml, str):
             xml = ET.fromstring(xml)
-
-        el = xml.find('./assignedNode')
-        config['node_filter'] = el.text if el is not None else ''
 
         for axis in xml.findall('./axes/hudson.matrix.TextAxis'):
             axis_name = axis.find('name').text

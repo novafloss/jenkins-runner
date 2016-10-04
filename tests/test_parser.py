@@ -93,16 +93,6 @@ class TestXml(TestCase):
         assert 'NODE' not in new.config['parameters']
         assert 'REVISION' not in new.config['parameters']
 
-    def test_parse_node(self):
-        from jenkins_yml import Job
-
-        xml = Job(
-            name='freestyle', config=dict(node_filter='!windows')
-        ).as_xml()
-
-        job = Job.from_xml('freestyle', xml)
-        assert '!windows' == job.config['node_filter'], job.config
-
     def test_feature_base_features(self):
         from jenkins_yml import Job
 
