@@ -26,7 +26,6 @@ class Job(object):
         axis={},
         blocking_jobs=None,
         build_name='#${BUILD_NUMBER} on ${GIT_BRANCH}',
-        command='jenkins-yml-runner',
         default_revision='**',
         description='Job defined from jenkins.yml.',
         parameters={},
@@ -108,7 +107,7 @@ class Job(object):
         xpath = './/hudson.plugins.postbuildtask.TaskProperties/script'
         el = xml.find(xpath)
         after_script = el.text if el is not None else ''
-        if "YML_SCRIPT=after_script jenkins-yml-runner" == after_script:
+        if "YML_SCRIPT=after_script jenkins-yml-runner" in after_script:
             features.add('after_script')
 
         xpath = './/hudson.tasks.ArtifactArchiver/artifacts'

@@ -61,7 +61,7 @@
 </jenkins.model.BuildDiscarderProperty>
 {% endmacro %}
 
-{% macro builders(set_commit_status, command) %}
+{% macro builders(set_commit_status) %}
 <builders>
   {% if set_commit_status|default(False) %}
   <com.cloudbees.jenkins.GitHubSetCommitStatusBuilder plugin="github@1.19.1">
@@ -71,7 +71,7 @@
   </com.cloudbees.jenkins.GitHubSetCommitStatusBuilder>
   {% endif %}
   <hudson.tasks.Shell>
-    <command>{{ command }}</command>
+    <command>CI_ARTEFACTS=_ci/ jenkins-yml-runner</command>
   </hudson.tasks.Shell>
 </builders>
 {% endmacro %}
@@ -89,7 +89,7 @@
         </logTexts>
         <EscalateStatus>false</EscalateStatus>
         <RunIfJobSuccessful>false</RunIfJobSuccessful>
-        <script>YML_SCRIPT=after_script jenkins-yml-runner</script>
+        <script>CI_ARTEFACTS=_ci/ YML_SCRIPT=after_script jenkins-yml-runner</script>
       </hudson.plugins.postbuildtask.TaskProperties>
     </tasks>
   </hudson.plugins.postbuildtask.PostbuildTask>
