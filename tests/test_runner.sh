@@ -17,7 +17,7 @@ trap 'teardown $?' DEBUG
 ! jenkins-yml-runner
 JOB_NAME=undefined jenkins-yml-runner
 JOB_NAME=simple jenkins-yml-runner |& grep -C 10 simple
-! JOB_NAME=missing-script jenkins-yml-runner
+JOB_NAME=missing-script jenkins-yml-runner
 JOB_NAME=script jenkins-yml-runner
 YML_SCRIPT=after_script JOB_NAME=script jenkins-yml-runner |& grep -C 10 after_script
 ! YML_SCRIPT=hack_script JOB_NAME=script jenkins-yml-runner

@@ -86,7 +86,7 @@ def unconfined(job):
     script = job.config.get(entry)
     if not script:
         logger.error('Missing script.')
-        sys.exit(1)
+        sys.exit(0)
     script = script.strip() + '\n'
 
     script_name = '_job'
