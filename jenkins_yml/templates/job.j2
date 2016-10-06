@@ -71,7 +71,11 @@
   </com.cloudbees.jenkins.GitHubSetCommitStatusBuilder>
   {% endif %}
   <hudson.tasks.Shell>
-    <command>CI_ARTEFACTS=_ci/ jenkins-yml-runner</command>
+    <command>
+export CI_ARTEFACTS=_ci/
+rm -rf $CI_ARTEFACTS/
+mkdir -p $CI_ARTEFACTS/
+exec jenkins-yml-runner</command>
   </hudson.tasks.Shell>
 </builders>
 {% endmacro %}
@@ -163,8 +167,9 @@
         </logTexts>
         <EscalateStatus>false</EscalateStatus>
         <RunIfJobSuccessful>false</RunIfJobSuccessful>
-        <script>CI_ARTEFACTS=_ci/ YML_SCRIPT=after_script jenkins-yml-runner
-rm -rf _ci/
+        <script>export CI_ARTEFACTS=_ci/
+YML_SCRIPT=after_script jenkins-yml-runner
+rm -rf $CI_ARTEFACTS/
 </script>
       </hudson.plugins.postbuildtask.TaskProperties>
     </tasks>
