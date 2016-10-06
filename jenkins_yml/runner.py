@@ -99,8 +99,6 @@ def unconfined(job):
         )
 
     artefacts_dir = os.path.realpath(os.environ.get('CI_ARTEFACTS', '_ci'))
-    os.makedirs(artefacts_dir, exist_ok=True)
-
     environ = dict(job.config['parameters'], **os.environ)
     os.execle(
         script_name,
