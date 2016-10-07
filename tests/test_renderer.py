@@ -14,6 +14,7 @@ class TestFreestyle(TestCase):
         from jenkins_yml import Job
 
         config = dict(
+            disabled=True,
             github_repository='https://github.com/owner/repository',
             scm_credentials='github-https',
             node='slave1',
@@ -24,6 +25,7 @@ class TestFreestyle(TestCase):
         )
         xml = Job(name='freestyle', config=config).as_xml()
 
+        assert '<disabled>true</disabled>' in xml
         assert 'github-https' in xml
         assert 'owner/repository.git' in xml
         assert '${REVISION}' in xml

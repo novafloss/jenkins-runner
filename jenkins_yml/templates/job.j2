@@ -1,9 +1,9 @@
-{% macro base(build_name, description, periodic) %}
+{% macro base(build_name, description, disabled, periodic) %}
 <actions/>
 <description>{{ description }}</description>
 <keepDependencies>false</keepDependencies>
 <canRoam>true</canRoam>
-<disabled>false</disabled>
+<disabled>{{ disabled|lower }}</disabled>
 <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
 <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
 <triggers>

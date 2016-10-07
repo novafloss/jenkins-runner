@@ -2,7 +2,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <assignedNode/>
-  {{ base(build_name, description, periodic) }}
+  {{ base(build_name, description, disabled, periodic) }}
   <properties>
     {{ baseproperties(blocking_jobs)|indent(4) }}
     <hudson.model.ParametersDefinitionProperty>

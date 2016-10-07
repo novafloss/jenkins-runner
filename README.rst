@@ -37,6 +37,7 @@ you value.
   ``CI_ARTEFACTS`` env var.
 - Reads XUnit XML from ``_ci/xunit*.xml``.
 - Reads coverage report from ``coverage.xml``.
+- Globally disable jobs from Jenkins.
 
 
 Setup

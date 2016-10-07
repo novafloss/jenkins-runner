@@ -28,6 +28,7 @@ class Job(object):
         build_name='#${BUILD_NUMBER} on ${GIT_BRANCH}',
         default_revision='**',
         description='Job defined from jenkins.yml.',
+        disabled=False,
         parameters={},
         merged_nodes=[],
     )
@@ -53,6 +54,9 @@ class Job(object):
         config = dict(axis={}, parameters={})
         if isinstance(xml, str):
             xml = ET.fromstring(xml)
+
+        el = xml.find('./disabled')
+        config['disabled'] = el is not None and el.text == 'true'
 
         for axis in xml.findall('./axes/hudson.matrix.TextAxis'):
             axis_name = axis.find('name').text
