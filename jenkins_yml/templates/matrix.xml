@@ -2,7 +2,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <matrix-project plugin="matrix-project@1.7">
   <assignedNode>master</assignedNode>
-  {{ base(build_name, description, disabled, periodic)|indent(2) }}
+  {{ base(build_name, description, disabled, periodic) }}
   <properties>
     {{ baseproperties(blocking_jobs)|indent(4) }}
     <hudson.model.ParametersDefinitionProperty>
@@ -17,7 +17,7 @@
   </properties>
   {{ scm(github_repository, scm_credentials)|indent(2) }}
   {{ builders(set_commit_status)|indent(2) }}
-  {{ publishers()|indent(2) }}
+  {{ publishers() }}
   <axes>
     {% for name, values in axis|dictsort %}
     <hudson.matrix.TextAxis>
