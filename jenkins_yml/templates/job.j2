@@ -1,6 +1,6 @@
 {% macro base(build_name, description, disabled, periodic) %}
 <actions/>
-<description>{{ description }}</description>
+<description>{{ description|escape }}</description>
 <keepDependencies>false</keepDependencies>
 <canRoam>true</canRoam>
 <disabled>{{ disabled|lower }}</disabled>
