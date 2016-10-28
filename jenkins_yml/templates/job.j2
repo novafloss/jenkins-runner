@@ -73,7 +73,7 @@
   <hudson.tasks.Shell>
     <command>
 export CI_ARTEFACTS=_ci/
-rm -rf $CI_ARTEFACTS/
+rm -rf $CI_ARTEFACTS/ || true
 mkdir -p $CI_ARTEFACTS/
 exec jenkins-yml-runner</command>
   </hudson.tasks.Shell>
