@@ -98,13 +98,9 @@ def unconfined(job):
             stat.S_IREAD | stat.S_IWUSR | stat.S_IXUSR
         )
 
-    artefacts_dir = os.path.realpath(os.environ.get('CI_ARTEFACTS', '_ci'))
-    environ = dict(job.config['parameters'], **os.environ)
-    os.execle(
-        script_name,
-        dict(
-            environ,
-            CI='1',
-            CI_ARTEFACTS=artefacts_dir,
-        )
+    environ = dict(
+        {k: str(v) for k, v in job.config['parameters'].items()},
+        CI='1',
+        **os.environ
     )
+    os.execle(script_name, environ)
