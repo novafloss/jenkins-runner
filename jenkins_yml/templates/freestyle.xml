@@ -4,7 +4,7 @@
   <assignedNode/>
   {{ base(build_name, description, disabled, periodic) }}
   <properties>
-    {{ baseproperties(blocking_jobs)|indent(4) }}
+    {{ baseproperties(blocking_jobs, github_repository)|indent(4) }}
     <hudson.model.ParametersDefinitionProperty>
       <parameterDefinitions>
         {{ baseparameters(default_revision, parameters)|indent(8) }}

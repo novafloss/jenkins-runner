@@ -36,6 +36,7 @@ class TestFreestyle(TestCase):
         assert 'TimerTrigger' not in xml
         assert 'after_script' in xml
         assert ': teardown' not in xml
+        assert 'projectUrl>https://github' in xml
 
         config['periodic'] = 'H 0 * * *'
         xml = Job(name='freestyle', config=config).as_xml()
