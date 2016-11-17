@@ -45,6 +45,8 @@ class Job(object):
     def parse_all(cls, yml, defaults={}):
         config = yaml.load(yml)
         for name, config in config.items():
+            if name[0] in '._':
+                continue
             if name in cls.WELL_KNOWN_KEYS:
                 continue
             yield cls.factory(name, config, defaults)
