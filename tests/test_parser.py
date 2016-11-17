@@ -35,6 +35,13 @@ class TestYml(TestCase):
         job = jobs[0]
         assert 'job' == job.name
 
+    def test_hidden_section(self):
+        from jenkins_yml import Job
+
+        yml = "{_underscore: null, .dot: null}"
+        jobs = list(Job.parse_all(yml))
+        assert 0 == len(jobs)
+
 
 class TestXml(TestCase):
     def test_parse(self):
