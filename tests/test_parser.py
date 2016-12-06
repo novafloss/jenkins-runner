@@ -122,3 +122,13 @@ class TestXml(TestCase):
         )).as_xml()
         job = Job.from_xml('freestyle', xml)
         assert 'reference' in job.features
+
+    def test_feature_fetchpull(self):
+        from jenkins_yml import Job
+
+        xml = Job(name='freestyle', config=dict(
+            github_repository='https://github.com/owner/repo',
+            scm_credentials='creds',
+        )).as_xml()
+        job = Job.from_xml('freestyle', xml)
+        assert 'fetchpull' in job.features

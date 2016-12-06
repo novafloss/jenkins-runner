@@ -185,6 +185,7 @@ rm -rf $CI_ARTEFACTS/
     <hudson.plugins.git.UserRemoteConfig>
       <url>{{ github_repository }}.git</url>
       <credentialsId>{{ credentials }}</credentialsId>
+      <refspec>+refs/heads/*:refs/remote/origin/* +refs/pull/*:refs/remote/origin/pull/*</refspec>
     </hudson.plugins.git.UserRemoteConfig>
   </userRemoteConfigs>
   <branches>
