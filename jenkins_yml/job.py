@@ -39,6 +39,7 @@ class Job(object):
         'coverage',
         'reference',
         'xunit',
+        'fetchpull',
     }
 
     @classmethod
@@ -90,6 +91,8 @@ class Job(object):
             default = param.find('defaultValue').text
             config['parameters'][param_name] = default
 
+        features = set()
+
         xpath = './scm/userRemoteConfigs/hudson.plugins.git.UserRemoteConfig'
         gitinfo = xml.find(xpath)
         if gitinfo:
@@ -101,10 +104,13 @@ class Job(object):
             if creds_el is not None:
                 config['scm_credentials'] = creds_el.text.strip()
 
+            refspec = gitinfo.find('refspec')
+            pull = '+refs/pull/*:refs/remote/origin/pull/*'
+            if refspec is not None and pull in refspec.text.strip():
+                features.add('fetchpull')
+
         xpath = './/com.cloudbees.jenkins.GitHubSetCommitStatusBuilder'
         config['set_commit_status'] = bool(xml.findall(xpath))
-
-        features = set()
 
         xpath = './/hudson.plugins.postbuildtask.TaskProperties/script'
         el = xml.find(xpath)
