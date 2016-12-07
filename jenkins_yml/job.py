@@ -105,7 +105,7 @@ class Job(object):
                 config['scm_credentials'] = creds_el.text.strip()
 
             refspec = gitinfo.find('refspec')
-            pull = '+refs/pull/*:refs/remote/origin/pull/*'
+            pull = '+refs/pull/*:refs/remotes/origin/pull/*'
             if refspec is not None and pull in refspec.text.strip():
                 features.add('fetchpull')
 
