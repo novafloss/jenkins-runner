@@ -3,6 +3,7 @@ import pkg_resources
 import os
 import stat
 import sys
+from urllib.request import urlopen
 
 from .job import Job
 
@@ -26,11 +27,31 @@ def call_runner(runner, config):
     sys.exit(1)
 
 
+def notify():
+    url = os.environ.get('YML_NOTIFY_URL')
+    if not url:
+        logger.warn("Notify URL not defined in YML_NOTIFY_URL.")
+        return
+
+    logger.info("Notifying %s (GET).", url)
+    try:
+        with urlopen(url) as response:
+            if response.status > 400:
+                raise Exception("Request failed: %s" % (response.read(1024)))
+    except Exception as e:
+        logger.error("Notify error: %s", e)
+        sys.exit(1)
+
+
 def console_script():
     logging.basicConfig(
         format='%(message)s',
         level=logging.DEBUG,
     )
+
+    if ['notify'] == sys.argv[1:]:
+        notify()
+        sys.exit(0)
 
     name = os.environ.get('JOB_NAME')
     if not name:
