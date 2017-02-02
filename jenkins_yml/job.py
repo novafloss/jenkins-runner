@@ -1,6 +1,7 @@
 from copy import deepcopy
 import os.path
 import xml.etree.ElementTree as ET
+import logging
 
 import yaml
 
@@ -17,6 +18,9 @@ else:
         trim_blocks=True,
         undefined=jinja2.StrictUndefined,
     )
+
+
+logger = logging.getLogger(__name__)
 
 
 class Job(object):
@@ -177,29 +181,44 @@ class Job(object):
     def contains(self, other):
         my = self.as_dict()
         their = other.as_dict()
-        if not set(my['parameters']) >= set(their['parameters']):
+        missing = set(their['parameters']) - set(my['parameters'])
+        if missing:
+            logger.debug("Missing params %s.", ', '.join(missing))
             return False
 
-        if not set(my['axis']) >= set(their['axis']):
+        missing = set(their['axis']) - set(my['axis'])
+        if missing:
+            logger.debug("Missing axis %s.", ', '.join(missing))
             return False
 
         all_axis = set(my['axis']) | set(their['axis'])
         for axis in all_axis:
             mines = set(my['axis'].get(axis, []))
             theirs = set(their['axis'].get(axis, []))
-            if not mines >= theirs:
+            missing = theirs - mines
+            if missing:
+                logger.debug(
+                    "Missing values %s in axis %s.", ', '.join(missing), axis
+                )
                 return False
 
         if all_axis:
             # Care available nodes in Jenkins only for matrix jobs.
-            if not set(my['merged_nodes']) >= set(their['merged_nodes']):
+            missing = set(their['merged_nodes']) - set(my['merged_nodes'])
+            if missing:
+                logger.debug(
+                    "Missing %r in matrix node axis.", list(missing)[0]
+                )
                 return False
         else:
             # Else, only care that we have a node param.
             if their['merged_nodes'] and not my['merged_nodes']:
+                logger.debug("Missing node parameter.")
                 return False
 
-        if not self.features >= other.features:
+        missing = other.features - self.features
+        if missing:
+            logger.debug("Missing features %s.", ', '.join(missing))
             return False
 
         return True

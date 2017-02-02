@@ -13,7 +13,7 @@ class TestContains(TestCase):
 
         new_job = Job('freestyle', config=dict(
             parameters=dict(
-                TITI='tata',
+                TOTO='tata', TITI='tata',
             ),
         ))
 
@@ -35,7 +35,7 @@ class TestContains(TestCase):
 
         new_job = Job('freestyle', config=dict(
             axis=dict(
-                TITI=['tata'],
+                TOTO=['tata'], TITI=['tata'],
             ),
         ))
 
