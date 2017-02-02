@@ -37,9 +37,9 @@ class Job(object):
         'after_script',
         'artefacts',
         'coverage',
+        'fetchpull',
         'reference',
         'xunit',
-        'fetchpull',
     }
 
     @classmethod
