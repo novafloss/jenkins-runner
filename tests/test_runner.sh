@@ -31,7 +31,7 @@ MISSING_PARAM1= JOB_NAME=parameterized jenkins-yml-runner |& grep -C 10 default1
 PARAM1=custom1 JOB_NAME=parameterized jenkins-yml-runner |& grep -C 10 custom1
 YML_NOTIFY_URL=https://google.com/ jenkins-yml-runner notify
 ! YML_NOTIFY_URL=ttps://google.com/ jenkins-yml-runner notify
-! YML_NOTIFY_URL=ttps://unknown/ jenkins-yml-runner notify
+! YML_NOTIFY_URL=https://unknown/ timeout 1 jenkins-yml-runner notify
 
 
 

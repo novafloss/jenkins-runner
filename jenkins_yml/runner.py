@@ -1,10 +1,12 @@
 import logging
 import pkg_resources
 import os
+from socket import gaierror
 import stat
 import sys
 from time import sleep
 from urllib.request import urlopen
+from urllib.error import URLError
 
 from .job import Job
 
@@ -35,17 +37,21 @@ def notify():
         return
 
     logger.info("Notifying %s (GET).", url)
-    for delay in range(5):
+    for try_ in range(5):
         try:
             with urlopen(url) as response:
-                content = response.read(1024)
+                content = response.read(80)
                 if response.status < 400:
-                    logger.debug("Success: %s.", content)
+                    logger.debug("Success: %r.", content)
                     break
-                raise Exception("Request failed: %s" % (content,))
+                raise Exception("Request failed: %r" % (content,))
+        except URLError as e:
+            logger.error("URL error: %s", e)
+            if not isinstance(e.reason, gaierror):
+                sys.exit(1)
         except Exception as e:
             logger.error("Notify error: %s", e)
-        sleep(1 + delay * 2)
+        sleep(1 + try_ * 2)
     else:
         sys.exit(1)
 
