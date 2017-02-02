@@ -9,6 +9,7 @@ class TestFreestyle(TestCase):
 
         assert '<project>' in xml
         assert 'jenkins-yml-runner' in xml
+        assert 'YML_NOTIFY_URL' in xml
 
     def test_with_config(self):
         from jenkins_yml import Job
