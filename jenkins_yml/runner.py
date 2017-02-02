@@ -1,8 +1,12 @@
 import logging
 import pkg_resources
 import os
+from socket import gaierror
 import stat
 import sys
+from time import sleep
+from urllib.request import urlopen
+from urllib.error import URLError
 
 from .job import Job
 
@@ -26,11 +30,41 @@ def call_runner(runner, config):
     sys.exit(1)
 
 
+def notify():
+    url = os.environ.get('YML_NOTIFY_URL')
+    if not url:
+        logger.warn("Notify URL not defined in YML_NOTIFY_URL.")
+        return
+
+    logger.info("Notifying %s (GET).", url)
+    for try_ in range(5):
+        try:
+            with urlopen(url) as response:
+                content = response.read(80)
+                if response.status < 400:
+                    logger.debug("Success: %r.", content)
+                    break
+                raise Exception("Request failed: %r" % (content,))
+        except URLError as e:
+            logger.error("URL error: %s", e)
+            if not isinstance(e.reason, gaierror):
+                sys.exit(1)
+        except Exception as e:
+            logger.error("Notify error: %s", e)
+        sleep(1 + try_ * 2)
+    else:
+        sys.exit(1)
+
+
 def console_script():
     logging.basicConfig(
         format='%(message)s',
         level=logging.DEBUG,
     )
+
+    if ['notify'] == sys.argv[1:]:
+        notify()
+        sys.exit(0)
 
     name = os.environ.get('JOB_NAME')
     if not name:

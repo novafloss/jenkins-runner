@@ -35,6 +35,11 @@
   <description></description>
   <defaultValue>{{ default_revision }}</defaultValue>
 </hudson.model.StringParameterDefinition>
+<hudson.model.StringParameterDefinition>
+  <name>YML_NOTIFY_URL</name>
+  <description></description>
+  <defaultValue></defaultValue>
+</hudson.model.StringParameterDefinition>
 {% endmacro %}
 
 {% macro baseproperties(blocking_jobs, github_repository) %}
@@ -169,6 +174,7 @@ exec jenkins-yml-runner</command>
         <script>export CI_ARTEFACTS=_ci/
 YML_SCRIPT=after_script jenkins-yml-runner
 rm -rf $CI_ARTEFACTS/
+jenkins-yml-runner notify
 </script>
       </hudson.plugins.postbuildtask.TaskProperties>
     </tasks>

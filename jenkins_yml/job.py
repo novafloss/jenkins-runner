@@ -37,9 +37,15 @@ class Job(object):
         'after_script',
         'artefacts',
         'coverage',
+        'fetchpull',
+        'notify',
         'reference',
         'xunit',
-        'fetchpull',
+    }
+
+    builtin_paramaters = {
+        'REVISION',
+        'YML_NOTIFY_URL',
     }
 
     @classmethod
@@ -86,7 +92,7 @@ class Job(object):
                 continue
 
             param_name = param.find('name').text
-            if 'REVISION' == param_name:
+            if param_name in cls.builtin_paramaters:
                 continue
             default = param.find('defaultValue').text
             config['parameters'][param_name] = default
@@ -117,6 +123,9 @@ class Job(object):
         after_script = el.text if el is not None else ''
         if "YML_SCRIPT=after_script jenkins-yml-runner" in after_script:
             features.add('after_script')
+
+        if 'jenkins-yml-runner notify' in after_script:
+            features.add('notify')
 
         xpath = './/hudson.tasks.ArtifactArchiver/artifacts'
         if xml.find(xpath) is not None:

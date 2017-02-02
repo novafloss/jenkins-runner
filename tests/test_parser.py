@@ -132,3 +132,13 @@ class TestXml(TestCase):
         )).as_xml()
         job = Job.from_xml('freestyle', xml)
         assert 'fetchpull' in job.features
+
+    def test_feature_notify(self):
+        from jenkins_yml import Job
+
+        xml = Job(name='freestyle').as_xml()
+        job0 = Job.from_xml('freestyle', xml.replace('notify', 'POUET'))
+        job1 = Job.from_xml('freestyle', xml)
+        assert 'notify' not in job0.features
+        assert 'notify' in job1.features
+        assert 'YML_NOTIFY_URL' not in job1.config['parameters']
