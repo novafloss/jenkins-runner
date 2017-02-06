@@ -5,8 +5,9 @@ from socket import gaierror
 import stat
 import sys
 from time import sleep
-from urllib.request import urlopen
 from urllib.error import URLError
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 from .job import Job
 
@@ -36,10 +37,11 @@ def notify():
         logger.warn("Notify URL not defined in YML_NOTIFY_URL.")
         return
 
-    logger.info("Notifying %s (GET).", url)
+    logger.info("Notifying %s (POST).", url)
     for try_ in range(5):
         try:
-            with urlopen(url) as response:
+            req = Request(url, urlencode({}).encode('ascii'), method='POST')
+            with urlopen(req) as response:
                 content = response.read(80)
                 if response.status < 400:
                     logger.debug("Success: %r.", content)
