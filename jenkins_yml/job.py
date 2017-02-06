@@ -52,6 +52,17 @@ class Job(object):
         'YML_NOTIFY_URL',
     }
 
+    required_plugins = [
+        'build-blocker-plugin',
+        'build-name-setter',
+        'cobertura',
+        'github',
+        'matrix-combinations-parameter',
+        'matrix-project',
+        'nodelabelparameter',
+        'postbuild-task',
+    ]
+
     @classmethod
     def parse_all(cls, yml, defaults={}):
         config = yaml.load(yml)
