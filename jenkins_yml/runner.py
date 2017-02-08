@@ -1,7 +1,6 @@
 import logging
 import pkg_resources
 import os
-from socket import gaierror
 import stat
 import sys
 from time import sleep
@@ -39,6 +38,7 @@ def notify():
 
     logger.info("Notifying %s (POST).", url)
     for try_ in range(5):
+        wait = 1 + try_ * 2
         try:
             req = Request(url, urlencode({}).encode('ascii'), method='POST')
             with urlopen(req) as response:
@@ -48,12 +48,12 @@ def notify():
                     break
                 raise Exception("Request failed: %r" % (content,))
         except URLError as e:
-            logger.error("URL error: %s", e)
-            if not isinstance(e.reason, gaierror):
+            logger.error("Retrying in %ss. URL error: %s", wait, e)
+            if not isinstance(e.reason, IOError):
                 sys.exit(1)
         except Exception as e:
-            logger.error("Notify error: %s", e)
-        sleep(1 + try_ * 2)
+            logger.error("Retrying in %ss. Notify error: %s", wait, e)
+        sleep(wait)
     else:
         sys.exit(1)
 
